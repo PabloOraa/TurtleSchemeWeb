@@ -3,34 +3,19 @@ let GoodReadsKey = "NyUHBXWYMuGHygb7kdMlIg";
 
 async function performSearch()
 {
+    let result;
     let data = document.getElementById('SearchItem').value;
     let type = document.getElementById('type').value;
     data = data.split(' ').join('%20');
     if(type === 'Books')
     {
-        let result = await search(data);
-        if (result != null|| result == undefined)
+        result = await search(data);
+        if (result == null|| result == undefined)
             result = await searchGoodReads(data);
-        try
-        {
-            console.log("JSON");
-            let parsed = JSON.parse(result);
-            console.log(parsed + " Parsed");
-            document.getElementById('results').innerHTML = JSON.parse(result);
-        }
-        catch(Exception)
-        {
-            try
-            {
-                let xmlDoc = ( new XMLSerializer() ).serializeToString( result);
-                document.getElementById('results').innerHTML = xmlDoc;
-            }
-            catch(e)
-            {
-                document.getElementById('results').innerHTML = "Error 404";
-            }
-        }
     }
+
+
+    handleResult(result);
 }
 
 async function search(text)
@@ -50,4 +35,18 @@ async function searchGoodReads(text)
     {
         return data;
     });
+}
+
+function handleResult(result)
+{
+    if(result.contentType == "text/xml")
+    {
+        let xmlDoc = ( new XMLSerializer() ).serializeToString( result);
+        document.getElementById('results').innerHTML = xmlDoc;
+    }
+    else
+    {
+        let parsed = JSON.stringify(result);
+        document.getElementById('results').innerHTML = parsed;
+    }
 }
