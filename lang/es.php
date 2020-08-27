@@ -5,6 +5,7 @@
         "search" => "Buscar",
         "music" => "M&uacute;sica",
         "books" => "Libros",
-        "createdby" => "Creado por"
+        "createdby" => "Creado por",
+        "error" => "No se han encontrado datos para la b&uacute;squeda solicitada. Pruebe con otro título o autor a buscar"
     );
 ?>

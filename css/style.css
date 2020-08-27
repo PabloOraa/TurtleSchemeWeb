@@ -29,6 +29,16 @@ main
     margin-left: 10px;
 }
 
+.visible 
+{
+    visibility: visible;
+}
+
+.not-visible 
+{
+    visibility: hidden;
+}
+
 @media screen and (max-width: 185px) 
 {
     footer:lang(es)
@@ -41,3 +51,37 @@ main
         overflow: hidden;
     }   
 }
+
+/*Code from https://codepen.io/adalab/pen/NzOzQx?editors=1111 for the collapsable menus*/
+.collapsible 
+{
+    border: 1px solid #05c;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.collapsible__label 
+{
+    font-weight: normal;
+    font-size: 20px;
+    margin: 0;
+    padding: 10px 20px;
+    background: #0099e0;
+    color: white;
+    cursor: pointer;
+}
+.collapsible__content
+{
+    padding: 20px;
+    display: none;
+}
+.collapsible--visible .collapsible__label 
+{
+    background: #0066d1;
+}
+.collapsible--visible .collapsible__content 
+{
+    display: block;
+}
+  
+  

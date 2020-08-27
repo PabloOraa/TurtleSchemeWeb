@@ -5,6 +5,7 @@
         "search" => "Search",
         "music" => "Music",
         "books" => "Books",
-        "createdby" => "Created by"
+        "createdby" => "Created by",
+        "error" => "Error"
     );
 ?>
