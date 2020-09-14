@@ -11,6 +11,12 @@ body
     padding: 25px;
 }
 
+img
+{
+    width: 335px;
+    height: 320px;
+}
+
 footer 
 {
     position: absolute;
@@ -31,12 +37,12 @@ main
 
 .visible 
 {
-    visibility: visible;
+    visibility: block;
 }
 
 .not-visible 
 {
-    visibility: hidden;
+    display: none;
 }
 
 @media screen and (max-width: 185px) 

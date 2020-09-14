@@ -7,6 +7,8 @@
         <!--CSS-->
         <link rel="stylesheet" href="../css/style.css">
         <!--JS-->
+        <script src="../javascript/Media.js"></script>
+        <script src='../javascript/cards.js'></script>
         <script src="../javascript/script.js"></script>
 
         <!--Scripts from https://github.com/pwa-builder/pwa-install -->
@@ -31,6 +33,11 @@
     
         <!-- Deezer --> 
         <script src="https://cdns-files.dzcdn.net/js/min/dz.js"></script>
+
+        <!--Cards-->
+        <link rel='stylesheet/less' href='../css/cards.less' type='text/css' />
+        <script src='../javascript/less.js' ></script>
+        <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.12.1/css/all.css' crossorigin='anonymous'>
     </head>
     <body class="d-flex flex-column h-100">
         <main role="main" class="flex-shrink-0 container">
@@ -56,15 +63,8 @@
 
             <div id="results" class="mt-3">
                 <p class="not-visible" id="errorMessage"><?php echo $lang["error"]?></p>
-                <div class="collapsible">
-                    <h2 class="collapsible__label">Source</h2>
-                    <div class="collapsible__content">
-                        <?php 
-                            $file = file_get_contents('../php/cards.php');
-                            $content = eval("?>$file");
-                            echo $content;
-                        ?>
-                    </div>
+                <div class="not-visible" id="resultMessage">
+
                 </div>
             </div>
         </main>
