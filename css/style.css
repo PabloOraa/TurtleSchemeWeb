@@ -45,6 +45,14 @@ main
     display: none;
 }
 
+.scroll 
+{
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
+    padding: 20px;
+}
+
 @media screen and (max-width: 185px) 
 {
     footer:lang(es)

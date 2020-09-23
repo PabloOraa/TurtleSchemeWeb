@@ -3,46 +3,63 @@ let GoodReadsKey = "NyUHBXWYMuGHygb7kdMlIg";
 let results = [];
 let media = [];
 var cardInit = "<section class='container'><div class='row active-with-click'>";
-
-var cardMiddle = "<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card Red'><h2><span>Título</span><strong><i class='fa fa-fw fa-star'></i>Autor/Autores</strong>" +
-                 "</h2><div class='mc-content'><div class='img-container'><img class='img-responsive' src='http://u.lorenzoferrara.net/marlenesco/material-card/thumb-christopher-walken.jpg'>"+
-                 "</div><div class='mc-description'>" + "Resumen</div></div><a class='mc-btn-action'><i class='fa fa-bars'></i></a><div class='mc-footer'></div></article></div>"
-var cardEnd = "</div></section></body>";
+var cardPreTitle = "<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card Red'><h2><span>";
+var cardPostTitlePreAuthor = "</span><strong><i class='fa fa-fw fa-star'></i>";
+var cardPostAuthorPreImage = "</strong></h2><div class='mc-content'><div class='img-container'><img class='img-responsive' src='";
+var cardPostImagePreResume = "'></div><div class='mc-description'>";
+var cardPostResumePreFooter = "</div></div><a class='mc-btn-action'><i class='fa fa-bars'></i></a><div class='mc-footer'>";
+var cardPostFooter = "</div></article></div>"
+var cardEnd = "</div></section>";
 const sectionInit = "<div class='collapsible'><h2 class='collapsible__label'>";
 const sectionPostSource = "</h2><div class='collapsible__content'>";
 const sectionEnd = "</div></div>";
 const booksSource = ["Google","GoodReads"];
 const musicSource = ["Deezer"];
 
+let tempImage = 'http://u.lorenzoferrara.net/marlenesco/material-card/thumb-christopher-walken.jpg';
+
 async function performSearch()
 {
     results = [];
+    media = [];
     document.getElementById("errorMessage").className = "not-visible";
     let data = document.getElementById('SearchItem').value;
     let type = document.getElementById('type').value;
-    let source;
     let res;
+    let sourceMap = new Map();
     data = data.split(' ').join('%20');
     switch(type)
     {
         case 'Books':
             res = await searchGoogle(data)
             if(res.totalItems != 0)
+            {
                 results.push(res);
+                sourceMap = addSource(sourceMap, booksSource[0], res.totalItems);
+            }
             res = await searchGoodReads(data);
             if(res.getElementsByTagName("total-results")[0].childNodes[0].nodeValue != 0)
+            {
                 results.push(res);
-            source = booksSource;
+                sourceMap = addSource(sourceMap, booksSource[1],res.getElementsByTagName("total-results")[0].childNodes[0].nodeValue);
+            }
             break;
         case 'Music':
             res = await searchDeezer(data);
             if(res.total != 0)
+            {
                 results.push(res);
-            source = musicSource;
+                sourceMap = addSource(sourceMap,musicSource[0],res.total);
+            }
             break;
     }
+    handleResult(results, sourceMap);
+}
 
-    handleResult(results, source);
+function addSource(map, source, total)
+{
+    map.set(source,total);
+    return map;
 }
 
 async function searchGoogle(text)
@@ -93,19 +110,19 @@ function handleResult(results, sources)
         else
         {
             let res;
-            if(sources == booksSource)
+            if(sources.has(booksSource[0]))
             {   
                 res = results[result].items;
 
                 for(let r in res)
-                    media.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors));
+                    media.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors, res[r].volumeInfo.description, res[r].volumeInfo.imageLinks.thumbnail, res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink));
             }
-            else if(sources == musicSource)
+            else if(sources.has(musicSource[0]))
             {
                 res = results[result].data;
 
                 for(let r in res)
-                    media.push(new Media(res[r].id,res[r].title,res[r].artist.name));
+                    media.push(new Media(res[r].id,res[r].title,res[r].artist.name, 'Test',res[r].album.cover_big, res[r].link,res[r].preview));
             }
         }
     writeResult(media,sources);
@@ -120,23 +137,25 @@ function writeResult(content,sources)
     {    
         document.getElementById('resultMessage').innerHTML = "";
         document.getElementById('resultMessage').className = "visible";
-        for(let source in sources)
-            createSection(content,sources[source]);
+        sources.forEach(function(value, key, map){createSection(content,key, value)});
         sectionWork();
         cardWork();
     }
 }
 
-function createSection(content, source)
+function createSection(content, source, maxItem)
 {
+    if(content.length < maxItem) maxItem = content.length;
     let section = sectionInit + source + sectionPostSource;
-    let cards;
-    for(let indivContent in content)
-        cards = createCard(content[indivContent], section);
+    let cards = cardInit;
+    for(let i = 0; i < maxItem; i++ )
+        cards = createCard(content[i], cards);
     if(cards != null && cards != undefined)
     {   
-        cards += sectionEnd;
-        document.getElementById('resultMessage').innerHTML += cards;
+        cards += cardEnd;
+        section += cards;
+        section += sectionEnd;
+        document.getElementById('resultMessage').innerHTML += section;
     }
 }
 
@@ -144,14 +163,24 @@ function createCard(content, previousHTML)
 {
     if(content == null || content == undefined)
         return null;
-    let sample;
-    previousHTML += cardInit;
-    
-    for(let indivContent in content)
-    {
-        previousHTML += cardMiddle;
-    }
-    previousHTML += cardEnd;
+    previousHTML = createContentCard(content, previousHTML);
+    return previousHTML;
+}
+
+function createContentCard(content, previousHTML)
+{
+    previousHTML += cardPreTitle;
+    previousHTML += content.title;
+    previousHTML += cardPostTitlePreAuthor;
+    previousHTML += content.author;
+    previousHTML += cardPostAuthorPreImage;
+    previousHTML += content.image;
+    previousHTML += cardPostImagePreResume;
+    previousHTML += '<span class=scroll>' + content.description + '</span>';
+    previousHTML += cardPostResumePreFooter;
+    previousHTML += '<a href=' + content.link + '><p>Ver en la tienda</p></a>';
+    previousHTML += '<a href=' + content.previewLink + '>Vista previa</a>';
+    previousHTML += cardPostFooter;
     return previousHTML;
 }
 
