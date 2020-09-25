@@ -11,6 +11,16 @@ body
     padding: 25px;
 }
 
+.shopping-preview-right
+{
+    margin-left: 50%;
+}
+
+.shopping-preview-left
+{
+    margin-right: 50%;
+}
+
 img
 {
     width: 335px;
