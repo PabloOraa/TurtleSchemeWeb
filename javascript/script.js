@@ -91,6 +91,7 @@ function handleResult(results, sources)
             {
                 parsed.push((new XMLSerializer()).serializeToString(value));
                 i++;
+                addToMap(media,key,parsed);
             }
             else
             {
@@ -105,15 +106,15 @@ function handleResult(results, sources)
                 }
                 else if(sources == musicSource)
                 {
-                    switch(i)
+                    switch(key)
                     {
-                        case 0: //Deezer
+                        case 'Deezer': //Deezer
                             res = value.data;
                             for(let r in res)
                                 if(res[r].album.cover_big != undefined)
                                     parsed.push(new Media(res[r].id,res[r].title,res[r].artist.name, null,res[r].album.cover_big, res[r].link,res[r].preview,null,null));
                             break;
-                        case 1: //LastFM
+                        case 'LastFM': //LastFM
                             res = value.results.albummatches.album;
                             for(let album in res)
                                 if(res[album].image[res[album].image.length-1]["#text"] != "")
@@ -190,8 +191,7 @@ function createContentCard(content, previousHTML)
     if(content.getTitle().length > 37) previousHTML += "<p class='moreReducedText'>"+content.getTitle()+"</p>";
     else if(content.getTitle().length > 26) previousHTML += "<p class='reducedText'>"+content.getTitle()+"</p>"; 
     else previousHTML += content.getTitle();
-    previousHTML += cardPostTitlePreAuthor;
-    console.log(content.author.toString().length);
+    previousHTML += cardPostTitlePreAuthor;;
     if(content.author.toString().length > 37) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;   
     else if(content.author.toString().length > 19) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;    
     else previousHTML += "<strong><i class='fa fa-fw fa-star'></i>"+content.author;
