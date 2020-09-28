@@ -111,13 +111,13 @@ function handleResult(results, sources)
                             res = value.data;
                             for(let r in res)
                                 if(res[r].album.cover_big != undefined)
-                                    parsed.push(new Media(res[r].id,res[r].title,res[r].artist.name, 'Test',res[r].album.cover_big, res[r].link,res[r].preview,null,null));
+                                    parsed.push(new Media(res[r].id,res[r].title,res[r].artist.name, null,res[r].album.cover_big, res[r].link,res[r].preview,null,null));
                             break;
                         case 1: //LastFM
                             res = value.results.albummatches.album;
                             for(let album in res)
                                 if(res[album].image[res[album].image.length-1]["#text"] != "")
-                                    parsed.push(new Media(res[album].mbid, res[album].name,res[album].artist, 'Test', res[album].image[res[album].image.length-1]["#text"], res[album].url, null,null,null))
+                                    parsed.push(new Media(res[album].mbid, res[album].name,res[album].artist, null, res[album].image[res[album].image.length-1]["#text"], res[album].url, null,null,null))
                     }
                 }
                 else if(sources == moviesSource)
