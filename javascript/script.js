@@ -1,8 +1,3 @@
-let GoogleKey = "AIzaSyClx470vGZU-Th3z32kk6xniV9NSYvjiSg";
-let GoodReadsKey = "NyUHBXWYMuGHygb7kdMlIg";
-let SpotifyToken = "";
-let LastFMAPIKey = "40a0d7ad1498eeada629d92f48bcc6ae";
-let LastFMAPIKeySecret = "7f22785605b38cd7ea0ab9e1c540cf5e";
 let results = [];
 let media = new Map();
 var cardInit = "<section class='container'><div class='row active-with-click'>";
@@ -18,13 +13,8 @@ const sectionPostSource = "</h2><div class='collapsible__content'>";
 const sectionEnd = "</div></div>";
 const booksSource = ["Google","GoodReads"];
 const musicSource = ["Deezer", "LastFM"];
-
-/*window.onload = () => s
-{   //&code="+code+"
-    let url = "https://accounts.spotify.com/api/token?grant_type=authorization_code&client_secret=f6d7eb3833fe49798fdfac92a4f7cdf1&client_id=1c77ad14a10147938dfc54a3a269a406";
-    console.log("Method");
-    $.ajax(url).done((result) =>{console.log(result);});
-}*/
+const moviesSource = ["OMBd"];
+const seriesSource = ["OMBd"];
 
 function addToMap(map, source, total)
 {
@@ -61,69 +51,20 @@ async function performSearch()
             if(res.results.albummatches.album.length != 0)
                 addToMap(results,musicSource[1],res);
             break;
+        case 'Movies':
+            source = moviesSource;
+            res = await searchOMBd(data,'movie');
+            if(res.totalResults != 0)
+                addToMap(results,moviesSource[0],res);
+            break;
+        case 'Series':
+            source = seriesSource;
+            res = await searchOMBd(data,'series');
+            if(res.totalResults != 0)
+                addToMap(results,moviesSource[0],res);
+            break;
     }
     handleResult(results, source);
-}
-
-async function searchGoogle(text)
-{
-    let url = "https://www.googleapis.com/books/v1/volumes?q="+text+"&key="+GoogleKey;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
-    {
-        if(data.status == 200)
-            return data.items;
-        else
-            return null;
-    });
-}
-
-
-async function searchGoodReads(text)
-{
-    let url = "https://www.goodreads.com/search/index.xml?q="+text+"&key=" + GoodReadsKey;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });
-}
-
-async function searchDeezer(text)
-{
-    let url = "https://api.deezer.com/search?q="+text;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });
-}
-
-async function searchSpotify(text)
-{
-    /*let url = "https://api.spotify.com/v1/search?q="+text;
-    return await $.ajax({url = url,headers: { Authorization: 'Bearer ${token}' }},"xhrFields: { withCredentials: true }").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });*/
-}
-
-async function searchLastFM(text)
-{
-    let url = "http://ws.audioscrobbler.com/2.0/?method=album.search&album="+text+"&api_key="+LastFMAPIKey+"&format=json";
-    return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });
 }
 
 function handleResult(results, sources)
@@ -133,7 +74,9 @@ function handleResult(results, sources)
     let keyOut;  
     try
     {
-        results.forEach((value, key) =>
+        if(results.size == 0)
+            errorMessage();
+        results.forEach(async (value, key) => 
         {
             parsed = [];
             keyOut = key;
@@ -151,13 +94,7 @@ function handleResult(results, sources)
 
                     for(let r in res)
                         if(res[r].volumeInfo.imageLinks != undefined)
-                            parsed.push(new Media(
-                                                res[r].id,
-                                                res[r].volumeInfo.title,
-                                                res[r].volumeInfo.authors, 
-                                                res[r].volumeInfo.description,
-                                                res[r].volumeInfo.imageLinks.thumbnail,
-                                                res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink));
+                            parsed.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors, res[r].volumeInfo.description,res[r].volumeInfo.imageLinks.thumbnail,res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink,null,null));
                 }
                 else if(sources == musicSource)
                 {
@@ -166,12 +103,34 @@ function handleResult(results, sources)
                         case 0: //Deezer
                             res = value.data;
                             for(let r in res)
-                                parsed.push(new Media(res[r].id,res[r].title,res[r].artist.name, 'Test',res[r].album.cover_big, res[r].link,res[r].preview));
+                                parsed.push(new Media(res[r].id,res[r].title,res[r].artist.name, 'Test',res[r].album.cover_big, res[r].link,res[r].preview,null,null));
                             break;
                         case 1: //LastFM
                             res = value.results.albummatches.album;
                             for(let album in res)
-                                parsed.push(new Media(res[album].mbid, res[album].name,res[album].artist, 'Test', res[album].image[res[album].image.length-1]["#text"], res[album].url, null))
+                                parsed.push(new Media(res[album].mbid, res[album].name,res[album].artist, 'Test', res[album].image[res[album].image.length-1]["#text"], res[album].url, null,null,null))
+                    }
+                }
+                else if(sources == moviesSource)
+                {
+                    res = value.Search;
+                    for(let r in res)
+                    {
+                        let exactResult = getDetails(res[r].Title,'movie');
+                        parsed.push(new Media(exactResult.imbdID,exactResult.Title,exactResult.Director + '-' + exactResult.Genre, exactResult.Plot,exactResult.Poster,null,null,exactResult.Year,exactResult.Runtime));
+                    }
+                }
+                else if(sources == seriesSource)
+                {
+                    res = value.Search;
+                    for(let r in res)
+                    {
+                        let exactResult = await getDetails(res[r].Title,'series');
+                        if(exactResult.Response == "True")
+                        {
+                            console.log(exactResult.Poster);
+                            parsed.push(new Media(exactResult.imbdID,exactResult.Title,exactResult.Director + '-' + exactResult.Genre, exactResult.Plot,exactResult.Poster,null,null,exactResult.Year,exactResult.Runtime));
+                        }
                     }
                 }
                 addToMap(media,keyOut,parsed);
@@ -236,8 +195,10 @@ function createContentCard(content, previousHTML)
     previousHTML += cardPostImagePreResume;
     if(content.description != "Test") previousHTML += '<span class=scroll>' + content.description + '</span>';
     previousHTML += cardPostResumePreFooter;
-    previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="Comprar"></i></a>';
+    if(content.link != null) previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="Comprar"></i></a>';
+    else previousHTML += '<p><b>Year</b>: ' + content.year + '</p></hr>';
     if(content.previewLink != null)previousHTML += '<a href="' + content.previewLink + '" class="shopping-preview-right"><i class="fa fa-eye" title="Vista Previa"></i></a>';
+    else previousHTML += '<b>Episode\'s length</b>: ' + content.duration;  
     previousHTML += cardPostFooter;
     return previousHTML;
 }

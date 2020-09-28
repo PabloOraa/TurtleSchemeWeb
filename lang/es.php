@@ -5,6 +5,8 @@
         "search" => "Buscar",
         "music" => "M&uacute;sica",
         "books" => "Libros",
+        "movies" => "Películas",
+        "series" => "Series",
         "createdby" => "Creado por",
         "error" => "No se han encontrado datos para la b&uacute;squeda solicitada. Pruebe con otro título o autor a buscar"
     );

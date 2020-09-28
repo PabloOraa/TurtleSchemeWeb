@@ -5,6 +5,8 @@
         "search" => "Search",
         "music" => "Music",
         "books" => "Books",
+        "movies" => "Movies",
+        "series" => "Series",
         "createdby" => "Created by",
         "error" => "Error"
     );

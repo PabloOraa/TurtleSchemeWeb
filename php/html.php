@@ -9,6 +9,7 @@
         <!--JS-->
         <script src="../javascript/Media.js"></script>
         <script src='../javascript/cards.js'></script>
+        <script src='../javascript/calls.js'></script>
         <script src="../javascript/script.js"></script>
 
         <!--Scripts from https://github.com/pwa-builder/pwa-install -->
@@ -58,6 +59,8 @@
                 <select class="left-space-10" title="Type" id="type">
                     <option name="Music" value="Music" label="<?php echo $lang["music"];?>"></option>
                     <option name="Books" value="Books" label="<?php echo $lang["books"];?>" selected></option>
+                    <option name="Movies" value="Movies" label="<?php echo $lang["movies"];?>"></option>
+                    <option name="Series" value="Series" label="<?php echo $lang["series"]?>"></option>
                 </select>
             </form>
 
