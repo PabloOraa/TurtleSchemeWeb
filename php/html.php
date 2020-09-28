@@ -41,8 +41,14 @@
         <!--CSS-->
         <link rel="stylesheet" href="../css/style.css">
     </head>
-    <body class="d-flex flex-column h-100">
+    <body class="d-flex flex-column h-100 claro">
         <main role="main" class="flex-shrink-0 container">
+            <div>
+                <label class="switch">
+                    <input type="checkbox" onchange="cambiarModo()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
             <p><?php echo $lang["intro"];?></p>
             <p><?php echo $lang["instructions"];?></p>
             <pwa-install>Install</pwa-install>

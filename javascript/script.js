@@ -187,26 +187,29 @@ function createCard(content, previousHTML)
 
 function createContentCard(content, previousHTML)
 {
-    previousHTML += cardPreTitle;
-    if(content.getTitle().length > 37) previousHTML += "<p class='moreReducedText'>"+content.getTitle()+"</p>";
-    else if(content.getTitle().length > 26) previousHTML += "<p class='reducedText'>"+content.getTitle()+"</p>"; 
-    else previousHTML += content.getTitle();
-    previousHTML += cardPostTitlePreAuthor;;
-    if(content.author.toString().length > 37) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;   
-    else if(content.author.toString().length > 19) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;    
-    else previousHTML += "<strong><i class='fa fa-fw fa-star'></i>"+content.author;
-    previousHTML += cardPostAuthorPreImage;
-    previousHTML += content.image;
-    previousHTML += cardPostImagePreResume;
-    if(content.description != undefined) previousHTML += '<span class=scroll>' + content.description + '</span>';
-    else previousHTML += '<span class=scroll>There is no description for this product.</span>';
-    previousHTML += cardPostResumePreFooter;
-    if(content.link != null) previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="Comprar"></i></a>';
-    else if(content.year != null) previousHTML += '<p><b>Year</b>: ' + content.year + '</p></hr>';
-    if(content.previewLink != null)previousHTML += '<a href="' + content.previewLink + '" class="shopping-preview-right"><i class="fa fa-eye" title="Vista Previa"></i></a>';
-    else if(content.duration != null) previousHTML += '<b>Episode\'s length</b>: ' + content.duration;  
-    previousHTML += cardPostFooter;
-    return previousHTML;
+    if(content instanceof Media)
+    {
+        previousHTML += cardPreTitle;
+        if(content.getTitle().length > 37) previousHTML += "<p class='moreReducedText'>"+content.getTitle()+"</p>";
+        else if(content.getTitle().length > 26) previousHTML += "<p class='reducedText'>"+content.getTitle()+"</p>"; 
+        else previousHTML += content.getTitle();
+        previousHTML += cardPostTitlePreAuthor;;
+        if(content.author.toString().length > 37) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;   
+        else if(content.author.toString().length > 19) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;    
+        else previousHTML += "<strong><i class='fa fa-fw fa-star'></i>"+content.author;
+        previousHTML += cardPostAuthorPreImage;
+        previousHTML += content.image;
+        previousHTML += cardPostImagePreResume;
+        if(content.description != undefined) previousHTML += '<span class=scroll>' + content.description + '</span>';
+        else previousHTML += '<span class=scroll>There is no description for this product.</span>';
+        previousHTML += cardPostResumePreFooter;
+        if(content.link != null) previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="Comprar"></i></a>';
+        else if(content.year != null) previousHTML += '<p><b>Year</b>: ' + content.year + '</p></hr>';
+        if(content.previewLink != null)previousHTML += '<a href="' + content.previewLink + '" class="shopping-preview-right"><i class="fa fa-eye" title="Vista Previa"></i></a>';
+        else if(content.duration != null) previousHTML += '<b>Episode\'s length</b>: ' + content.duration;  
+        previousHTML += cardPostFooter;
+        return previousHTML;
+    }
 }
 
 
@@ -241,4 +244,11 @@ function closeAllCollapsibles()
     let collapsibles = document.querySelectorAll('.collapsible');
     for (let i = 0; i < collapsibles.length; i++) 
         collapsibles[i].classList.remove('collapsible--visible');
+}
+
+function cambiarModo()
+{
+    let body = document.body;
+    body.classList.toggle("oscuro");
+    body.classList.toggle("claro");
 }

@@ -471,6 +471,7 @@
             top: 50px;
             padding-top: 5.6em;
             .opacity(1);
+            color: #000000;
             @media screen and (max-width: 767px) {
                 position: relative;
                 top: auto;
@@ -585,12 +586,26 @@
 
 
 @import (css) "https://fonts.googleapis.com/css?family=Raleway:400,300,200,500,600,700";
-body {
+body.claro 
+{
+    transition: .4s;
   background-color: #ECEFF1;
   color: #37474F;
   font-family: 'Raleway', sans-serif;
   font-weight: 300;
   font-size: 16px;
+  text-align: justify;
+}
+
+body.oscuro 
+{
+    transition: .4s;
+    background-color: #1f1f1f;
+    color: #f1eded;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    text-align: justify;
 }
 
 h1, h2, h3 {
