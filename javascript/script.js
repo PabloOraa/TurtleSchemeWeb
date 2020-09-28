@@ -1,8 +1,8 @@
-let results = [];
-let media = new Map();
+let results;
+let media;
 var cardInit = "<section class='container'><div class='row active-with-click'>";
 var cardPreTitle = "<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card Red'><h2><span>";
-var cardPostTitlePreAuthor = "</span><strong><i class='fa fa-fw fa-star'></i>";
+var cardPostTitlePreAuthor = "</span>";
 var cardPostAuthorPreImage = "</strong></h2><div class='mc-content'><div class='img-container'><img class='img-responsive' src='";
 var cardPostImagePreResume = "'></div><div class='mc-description'>";
 var cardPostResumePreFooter = "</div></div><a class='mc-btn-action'><i class='fa fa-bars'></i></a><div class='mc-footer'>";
@@ -25,7 +25,9 @@ function addToMap(map, source, total)
 async function performSearch()
 {
     results = new Map();
+    media = new Map();
     document.getElementById("errorMessage").className = "not-visible";
+    document.getElementById("resultMessage").innerHTML = "";
     let data = document.getElementById('SearchItem').value;
     let type = document.getElementById('type').value;
     let res;
@@ -54,32 +56,37 @@ async function performSearch()
         case 'Movies':
             source = moviesSource;
             res = await searchOMBd(data,'movie');
-            if(res.totalResults != 0)
-                addToMap(results,moviesSource[0],res);
+            await getDetail(res, 'movie');
             break;
         case 'Series':
             source = seriesSource;
             res = await searchOMBd(data,'series');
-            if(res.totalResults != 0)
-                addToMap(results,moviesSource[0],res);
+            await getDetail(res, 'series');
             break;
     }
     handleResult(results, source);
+}
+
+async function getDetail(data, type)
+{
+    let res = [];
+    for(let media in data.Search)
+        res.push(await getDetails(data.Search[media].Title, type));
+    if(res.length != 0)
+        addToMap(results,moviesSource[0],res);
 }
 
 function handleResult(results, sources)
 {
     let i = 0;
     let parsed = []; 
-    let keyOut;  
     try
     {
         if(results.size == 0)
             errorMessage();
-        results.forEach(async (value, key) => 
+        results.forEach((value, key) => 
         {
             parsed = [];
-            keyOut = key;
             if(value.contentType == "text/xml")
             {
                 parsed.push((new XMLSerializer()).serializeToString(value));
@@ -103,41 +110,34 @@ function handleResult(results, sources)
                         case 0: //Deezer
                             res = value.data;
                             for(let r in res)
-                                parsed.push(new Media(res[r].id,res[r].title,res[r].artist.name, 'Test',res[r].album.cover_big, res[r].link,res[r].preview,null,null));
+                                if(res[r].album.cover_big != undefined)
+                                    parsed.push(new Media(res[r].id,res[r].title,res[r].artist.name, 'Test',res[r].album.cover_big, res[r].link,res[r].preview,null,null));
                             break;
                         case 1: //LastFM
                             res = value.results.albummatches.album;
                             for(let album in res)
-                                parsed.push(new Media(res[album].mbid, res[album].name,res[album].artist, 'Test', res[album].image[res[album].image.length-1]["#text"], res[album].url, null,null,null))
+                                if(res[album].image[res[album].image.length-1]["#text"] != "")
+                                    parsed.push(new Media(res[album].mbid, res[album].name,res[album].artist, 'Test', res[album].image[res[album].image.length-1]["#text"], res[album].url, null,null,null))
                     }
                 }
                 else if(sources == moviesSource)
                 {
-                    res = value.Search;
+                    res = value;
                     for(let r in res)
-                    {
-                        let exactResult = getDetails(res[r].Title,'movie');
-                        parsed.push(new Media(exactResult.imbdID,exactResult.Title,exactResult.Director + '-' + exactResult.Genre, exactResult.Plot,exactResult.Poster,null,null,exactResult.Year,exactResult.Runtime));
-                    }
+                        if(res[r].Poster != "N/A")
+                            parsed.push(new Media(res[r].imbdID,res[r].Title,(res[r].Director != "N/A" ? res[r].Director : res[r].Actors.split(",")[0]) + '-' + res[r].Genre.split(',')[0], res[r].Plot,res[r].Poster,null,null,res[r].Year,res[r].Runtime));
                 }
                 else if(sources == seriesSource)
                 {
-                    res = value.Search;
+                    res = value;
                     for(let r in res)
-                    {
-                        let exactResult = await getDetails(res[r].Title,'series');
-                        if(exactResult.Response == "True")
-                        {
-                            console.log(exactResult.Poster);
-                            parsed.push(new Media(exactResult.imbdID,exactResult.Title,exactResult.Director + '-' + exactResult.Genre, exactResult.Plot,exactResult.Poster,null,null,exactResult.Year,exactResult.Runtime));
-                        }
-                    }
+                        if(res[r].Poster != "N/A")
+                            parsed.push(new Media(res[r].imbdID,res[r].Title,(res[r].Director != "N/A" ? res[r].Director : res[r].Actors.split(",")[0]) + '-' + res[r].Genre.split(',')[0], res[r].Plot,res[r].Poster,null,null,res[r].Year,res[r].Runtime));
                 }
-                addToMap(media,keyOut,parsed);
+                addToMap(media,key,parsed);
                 i++;
             }
         });
-       
         writeResult(media);
     }
     catch(Exception)
@@ -150,7 +150,7 @@ function handleResult(results, sources)
 function writeResult(content)
 {
     document.getElementById('resultMessage').className = "not-visible";
-    if(results.length == 0)
+    if(content.size == 0)
         errorMessage();
     else
     {    
@@ -187,18 +187,24 @@ function createCard(content, previousHTML)
 function createContentCard(content, previousHTML)
 {
     previousHTML += cardPreTitle;
-    if(content.getTitle().length > 26) previousHTML += "<font size=3>"+content.getTitle()+"</font>"; else previousHTML += content.getTitle();
+    if(content.getTitle().length > 37) previousHTML += "<p class='moreReducedText'>"+content.getTitle()+"</p>";
+    else if(content.getTitle().length > 26) previousHTML += "<p class='reducedText'>"+content.getTitle()+"</p>"; 
+    else previousHTML += content.getTitle();
     previousHTML += cardPostTitlePreAuthor;
-    if(content.author.length > 26) previousHTML += "<font size=3>"+content.author+"</font>"; else previousHTML += content.author;
+    console.log(content.author.toString().length);
+    if(content.author.toString().length > 37) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;   
+    else if(content.author.toString().length > 19) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;    
+    else previousHTML += "<strong><i class='fa fa-fw fa-star'></i>"+content.author;
     previousHTML += cardPostAuthorPreImage;
     previousHTML += content.image;
     previousHTML += cardPostImagePreResume;
-    if(content.description != "Test") previousHTML += '<span class=scroll>' + content.description + '</span>';
+    if(content.description != undefined) previousHTML += '<span class=scroll>' + content.description + '</span>';
+    else previousHTML += '<span class=scroll>There is no description for this product.</span>';
     previousHTML += cardPostResumePreFooter;
     if(content.link != null) previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="Comprar"></i></a>';
-    else previousHTML += '<p><b>Year</b>: ' + content.year + '</p></hr>';
+    else if(content.year != null) previousHTML += '<p><b>Year</b>: ' + content.year + '</p></hr>';
     if(content.previewLink != null)previousHTML += '<a href="' + content.previewLink + '" class="shopping-preview-right"><i class="fa fa-eye" title="Vista Previa"></i></a>';
-    else previousHTML += '<b>Episode\'s length</b>: ' + content.duration;  
+    else if(content.duration != null) previousHTML += '<b>Episode\'s length</b>: ' + content.duration;  
     previousHTML += cardPostFooter;
     return previousHTML;
 }
@@ -208,11 +214,6 @@ function errorMessage()
 {
     document.getElementById("errorMessage").className = "visible";
 }
-
-/*DZ.init({
-    appId  : 'YOUR_APP_ID',
-    channelUrl : 'http://YOUR_DOMAIN/channel.html'
-});*/
 
 //Collapsable menus for the Query from https://codepen.io/adalab/pen/NzOzQx?editors=1111w
 function sectionWork()

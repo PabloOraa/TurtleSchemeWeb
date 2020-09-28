@@ -3,6 +3,7 @@ let GoodReadsKey = "NyUHBXWYMuGHygb7kdMlIg";
 let SpotifyToken = "";
 let LastFMAPIKey = "40a0d7ad1498eeada629d92f48bcc6ae";
 let LastFMAPIKeySecret = "7f22785605b38cd7ea0ab9e1c540cf5e";
+let MusicXMatchKey = "e23fe2527fb9a122166770f318866cfa";
 let OBDbKey = "758c9925";
 
 async function searchGoogle(text)
@@ -56,7 +57,7 @@ async function searchSpotify(text)
 
 async function searchLastFM(text)
 {
-    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}+"&format=json`;
+    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
     return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
     {
         if(data.status == 200)
@@ -66,9 +67,9 @@ async function searchLastFM(text)
     });
 }
 
-async function searchOMBd(data,type)
+async function searchMusixMatch(text) //Not in actual use
 {
-    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&s=${data}&r=json&type=${type}`;
+    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
     return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
     {
         if(data.status == 200)
@@ -78,9 +79,21 @@ async function searchOMBd(data,type)
     });
 }
 
-async function getDetails(data,type)
+async function searchOMBd(text,type)
 {
-    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&t=${data}&r=json&type=${type}&plot=short`;
+    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&s=${text}&r=json&type=${type}`;
+    return await $.ajax(url,"xhrFields: { withCredentials: true }").done( (data) =>
+    {
+        if(data.Response == "True")
+            return data;
+        else
+            return null;
+    });
+}
+
+async function getDetails(text,type)
+{
+    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&t=${text}&r=json&type=${type}&plot=short`;
     return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
     {
         if(data.status == 200)
@@ -90,9 +103,14 @@ async function getDetails(data,type)
     });
 }
 
-/*window.onload = () => s
+/*window.onload = () => 
 {   //&code="+code+"
     let url = "https://accounts.spotify.com/api/token?grant_type=authorization_code&client_secret=f6d7eb3833fe49798fdfac92a4f7cdf1&client_id=1c77ad14a10147938dfc54a3a269a406";
     console.log("Method");
     $.ajax(url).done((result) =>{console.log(result);});
 }*/
+
+/*DZ.init({
+    appId  : 'YOUR_APP_ID',
+    channelUrl : 'http://YOUR_DOMAIN/channel.html'
+});*/

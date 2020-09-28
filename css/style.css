@@ -63,6 +63,53 @@ main
     padding: 20px;
 }
 
+article > div > p
+{
+    margin-bottom: 0px;
+    text-align: justify;
+}
+
+.material-card > h2 > strong
+{
+    font-size: .8em;
+}
+
+.mc-active > h2 > span > p.reducedText, .mc-active > strong.reducedText
+{
+    font-size: x-large;
+}
+
+p.reducedText 
+{
+    font-size: large;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.mc-active > h2 > span > p.moreReducedText
+{
+    font-size: medium;
+}
+
+.mc-active > strong.moreReducedText
+{
+    font-size: small;
+}
+
+p.moreReducedText
+{
+    font-size: 11px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.mc-active > h2 > strong.moreReducedText
+{
+    font-size: 15px !important;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
 @media screen and (max-width: 185px) 
 {
     footer:lang(es)

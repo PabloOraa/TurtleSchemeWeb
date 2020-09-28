@@ -4,8 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TurtleScheme</title>
-        <!--CSS-->
-        <link rel="stylesheet" href="../css/style.css">
         <!--JS-->
         <script src="../javascript/Media.js"></script>
         <script src='../javascript/cards.js'></script>
@@ -39,6 +37,9 @@
         <link rel='stylesheet/less' href='../css/cards.less' type='text/css' />
         <script src='../javascript/less.js' ></script>
         <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.12.1/css/all.css' crossorigin='anonymous'>
+
+        <!--CSS-->
+        <link rel="stylesheet" href="../css/style.css">
     </head>
     <body class="d-flex flex-column h-100">
         <main role="main" class="flex-shrink-0 container">
