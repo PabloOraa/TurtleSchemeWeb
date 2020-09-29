@@ -8,6 +8,25 @@
         "movies" => "Películas",
         "series" => "Series",
         "createdby" => "Creado por",
-        "error" => "No se han encontrado datos para la b&uacute;squeda solicitada. Pruebe con otro título o autor a buscar"
+        "error" => "No se han encontrado datos para la b&uacute;squeda solicitada. Pruebe con otro título o autor a buscar",
+        "red" => "Rojo",
+        "pink" => "Rosa",
+        "purple" => "Morado",
+        "deepPurple" => "Morado oscuro",
+        "indigo" => "Indigo",
+        "blue" => "Azul",
+        "lightBlue" => "Azul claro",
+        "cyan" => "Cyan",
+        "teal" => "Verde azulado",
+        "green" => "Verde",
+        "lightGreen" => "Verde claro",
+        "lime" => "Lima",
+        "yellow" => "Amarillo",
+        "amber" => "Ambar",
+        "orange" => "Naranja",
+        "deepOrange" => "Naranja oscuro",
+        "brown" => "Marrón",
+        "grey" => "Gris",
+        "blueGrey" => "Gris Azulado"
     );
 ?>

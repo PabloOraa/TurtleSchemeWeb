@@ -232,3 +232,11 @@ input:checked + .slider:before
 {
     border-radius: 50%;
 }
+
+
+/*COLORS*/
+.material-card.Yellow .mc-btn-action,
+.Yellow > h2,.Amber > h2, .Lime > h2 
+{
+    color:#000000;
+}

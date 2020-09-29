@@ -1,3 +1,5 @@
+var defaultColor = "Red";
+
 function cardWork() 
 {
     $('.material-card > .mc-btn-action').click(function () {
@@ -28,3 +30,14 @@ function cardWork()
         }
     });
 };
+
+function changeCardColor()
+{
+    let newColor = document.getElementById('card-color').value;
+    document.getElementsByClassName('material-card').forEach((elem) => 
+    {
+        elem.classList.toggle(defaultColor);
+        elem.classList.toggle(newColor);
+    });
+    defaultColor = newColor;
+}

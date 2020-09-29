@@ -1,7 +1,7 @@
 let results;
 let media;
 var cardInit = "<section class='container'><div class='row active-with-click'>";
-var cardPreTitle = "<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card Red'><h2><span>";
+var cardPreTitle = `<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card ${defaultColor}'><h2><span>`;
 var cardPostTitlePreAuthor = "</span>";
 var cardPostAuthorPreImage = "</strong></h2><div class='mc-content'><div class='img-container'><img class='img-responsive' src='";
 var cardPostImagePreResume = "'></div><div class='mc-description'>";
