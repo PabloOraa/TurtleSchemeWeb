@@ -1,6 +1,6 @@
 class Media
 {
-    constructor(id,title,author, description, image, link, previewLink,year,runtime)
+    constructor(id,title,author, description, image, link, previewLink,year,runtime,generalReview)
     {
         this.id = id;
         this.title = title;
@@ -11,6 +11,7 @@ class Media
         this.previewLink = previewLink;
         this.year = year;
         this.duration = runtime;
+        this.generalReview = generalReview;
     }
 
     getTitle()

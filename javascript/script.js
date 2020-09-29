@@ -1,5 +1,6 @@
 let results;
 let media;
+let realColor;
 var cardInit = "<section class='container'><div class='row active-with-click'>";
 var cardPreTitle = `<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card ${defaultColor}'><h2><span>`;
 var cardPostTitlePreAuthor = "</span>";
@@ -15,6 +16,12 @@ const booksSource = ["Google","GoodReads"];
 const musicSource = ["Deezer", "LastFM"];
 const moviesSource = ["OMBd"];
 const seriesSource = ["OMBd"];
+
+window.onload = () => 
+{
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) 
+        document.body.classList.toggle("mobile");
+}
 
 function addToMap(map, source, total)
 {
@@ -102,7 +109,7 @@ function handleResult(results, sources)
 
                     for(let r in res)
                         if(res[r].volumeInfo.imageLinks != undefined)
-                            parsed.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors, res[r].volumeInfo.description,res[r].volumeInfo.imageLinks.thumbnail,res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink,null,null));
+                            parsed.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors, res[r].volumeInfo.description,res[r].volumeInfo.imageLinks.thumbnail,res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink,null,null, '5/5'));
                 }
                 else if(sources == musicSource)
                 {
@@ -157,6 +164,7 @@ function writeResult(content)
     {    
         document.getElementById('resultMessage').innerHTML = "";
         document.getElementById('resultMessage').className = "visible";
+        document.getElementById('cardColor').className = 'visible';
         content.forEach((value,key) => createSection(value,key));
         sectionWork();
         cardWork();
@@ -165,6 +173,7 @@ function writeResult(content)
 
 function createSection(content, source)
 {
+    realColor = "Red";
     let section = sectionInit + source + sectionPostSource;
     let cards = cardInit;
     content.forEach((value) => cards = createCard(value, cards));
@@ -174,6 +183,10 @@ function createSection(content, source)
         section += cards;
         section += sectionEnd;
         document.getElementById('resultMessage').innerHTML += section;
+        if(realColor != defaultColor)
+        {
+            $("#card-color").val(realColor).change();
+        }
     }
 }
 
@@ -187,16 +200,32 @@ function createCard(content, previousHTML)
 
 function createContentCard(content, previousHTML)
 {
+    let maxMaxTitleLength = 37;
+    let maxTitleLength = 26;
+    let maxMaxAuthorLength = 37;
+    let maxAuthorLength = 19;
     if(content instanceof Media)
     {
+        if(document.body.classList.contains("mobile"))
+        {
+            maxMaxTitleLength = 28;
+            maxTitleLength = 13;
+            maxMaxAuthorLength = 25;
+        }
+        if(defaultColor != "Red")
+        {
+            realColor = defaultColor;
+            defaultColor = "Red";
+            $("#card-color").val("Red");
+        }
         previousHTML += cardPreTitle;
-        if(content.getTitle().length > 37) previousHTML += "<p class='moreReducedText'>"+content.getTitle()+"</p>";
-        else if(content.getTitle().length > 26) previousHTML += "<p class='reducedText'>"+content.getTitle()+"</p>"; 
+        if(content.getTitle().length > maxMaxTitleLength) previousHTML += "<p class='moreReducedText'>"+content.getTitle()+"</p>";
+        else if(content.getTitle().length > maxTitleLength) previousHTML += "<p class='reducedText'>"+content.getTitle()+"</p>"; 
         else previousHTML += content.getTitle();
         previousHTML += cardPostTitlePreAuthor;;
-        if(content.author.toString().length > 37) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;   
-        else if(content.author.toString().length > 19) previousHTML += "<strong class='moreReducedText'><i class='fa fa-fw fa-star'></i>"+content.author;    
-        else previousHTML += "<strong><i class='fa fa-fw fa-star'></i>"+content.author;
+        if(content.author.toString().length > maxMaxAuthorLength) previousHTML += "<strong class='moreReducedText' title="+content.generalReview+"><i class='fa fa-fw fa-star' aria-hidden='true'></i>"+content.author;   
+        else if(content.author.toString().length > maxAuthorLength) previousHTML += "<strong class='moreReducedText' title="+content.generalReview+"><i class='fa fa-fw fa-star' aria-hidden='true'></i>"+content.author;    
+        else previousHTML += "<strong title="+content.generalReview+"><i class='fa fa-fw fa-star' label=checkReviews("+content.generalReview+")></i>"+content.author;
         previousHTML += cardPostAuthorPreImage;
         previousHTML += content.image;
         previousHTML += cardPostImagePreResume;
@@ -216,6 +245,7 @@ function createContentCard(content, previousHTML)
 function errorMessage() 
 {
     document.getElementById("errorMessage").className = "visible";
+    document.getElementById('cardColor').className = "not-visible";
 }
 
 //Collapsable menus for the Query from https://codepen.io/adalab/pen/NzOzQx?editors=1111w

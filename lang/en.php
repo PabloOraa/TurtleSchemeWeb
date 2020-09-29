@@ -9,6 +9,7 @@
         "series" => "Series",
         "createdby" => "Created by",
         "error" => "Error",
+        "cardColor" => "Card Color",
         "red" => "Red",
         "pink" => "Pink",
         "purple" => "Purple",

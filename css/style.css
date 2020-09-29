@@ -11,6 +11,11 @@ body
     padding: 25px;
 }
 
+.justify-text
+{
+    text-align: justify;
+}
+
 .shopping-preview-right
 {
     margin-left: 50%;
@@ -74,6 +79,11 @@ article > div > p
     font-size: .8em;
 }
 
+.mobile .material-card > h2 > strong.moreReducedText
+{
+    font-size: 14px !important;
+}
+
 .mc-active > h2 > span > p.reducedText, .mc-active > strong.reducedText
 {
     font-size: x-large;
@@ -91,9 +101,14 @@ p.reducedText
     font-size: medium;
 }
 
-.mc-active > strong.moreReducedText
+.mc-active > h2 > strong.moreReducedText
 {
-    font-size: small;
+    font-size: 12px !important;
+}
+
+.mobile .mc-active > h2 > strong.moreReducedText
+{
+    font-size: 9px !important;
 }
 
 p.moreReducedText
@@ -103,7 +118,7 @@ p.moreReducedText
     margin-bottom: 0px;
 }
 
-.mc-active > h2 > strong.moreReducedText
+strong.moreReducedText
 {
     font-size: 15px !important;
     padding-bottom: 0px;

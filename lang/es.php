@@ -9,6 +9,7 @@
         "series" => "Series",
         "createdby" => "Creado por",
         "error" => "No se han encontrado datos para la b&uacute;squeda solicitada. Pruebe con otro título o autor a buscar",
+        "cardColor" => "Color de las tarjetas",
         "red" => "Rojo",
         "pink" => "Rosa",
         "purple" => "Morado",

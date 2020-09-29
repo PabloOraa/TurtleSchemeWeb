@@ -33,11 +33,14 @@ function cardWork()
 
 function changeCardColor()
 {
-    let newColor = document.getElementById('card-color').value;
-    document.getElementsByClassName('material-card').forEach((elem) => 
+    if(document.getElementsByClassName('material-card').length != 0)
     {
-        elem.classList.toggle(defaultColor);
-        elem.classList.toggle(newColor);
-    });
-    defaultColor = newColor;
+        let newColor = document.getElementById('card-color').value;
+        document.getElementsByClassName('material-card').forEach((elem) => 
+        {
+            elem.classList.toggle(defaultColor);
+            elem.classList.toggle(newColor);
+        });
+        defaultColor = newColor;
+    }
 }
