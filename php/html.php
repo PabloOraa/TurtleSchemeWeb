@@ -85,7 +85,7 @@
                         <option name="Amber" value="Amber" label="<?php echo $lang["amber"];?>"></option>
                         <option name="Orange" value="Orange" label="<?php echo $lang["orange"];?>"></option>
                         <option name="Deep-Orange" value="Deep-Orange" label="<?php echo $lang["deepOrange"]?>"></option>
-                        <option name="Blue-Gray" value="Blue-Gray" label="<?php echo $lang["blueGrey"];?>"></option>
+                        <!--<option name="Blue-Gray" value="Blue-Gray" label="<?php echo $lang["blueGrey"];?>"></option>-->
                         <option name="Brown" value="Brown" label="<?php echo $lang["brown"];?>"></option>
                         <option name="Grey" value="Grey" label="<?php echo $lang["grey"]?>"></option>
                     </select>

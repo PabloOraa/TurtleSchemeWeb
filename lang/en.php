@@ -9,6 +9,9 @@
         "series" => "Series",
         "createdby" => "Created by",
         "error" => "Error",
+        "buy" => "Buy",
+        "preview" => "Preview",
+        "noDescription" => "There is no description for this product.",
         "cardColor" => "Card Color",
         "red" => "Red",
         "pink" => "Pink",
@@ -30,4 +33,13 @@
         "grey" => "grey",
         "blueGrey" => "Blue grey"
     );
+
+    if (!function_exists('getData'))
+    {
+        function getData()
+        {
+            global $lang;
+            return $lang;
+        }
+    }
 ?>

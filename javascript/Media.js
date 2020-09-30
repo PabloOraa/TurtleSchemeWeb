@@ -16,10 +16,10 @@ class Media
 
     getTitle()
     {
-        if(this.title.includes('('))
+        /*if(this.title.includes('('))
         {
             this.title = this.title.substr(0,this.title.indexOf('(')-1);
-        }
+        }*/
         return this.title;
     }
 }

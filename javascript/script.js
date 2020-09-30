@@ -1,6 +1,7 @@
 let results;
 let media;
 let realColor;
+var lang;
 var cardInit = "<section class='container'><div class='row active-with-click'>";
 var cardPreTitle = `<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card ${defaultColor}'><h2><span>`;
 var cardPostTitlePreAuthor = "</span>";
@@ -31,6 +32,8 @@ function addToMap(map, source, total)
 
 async function performSearch()
 {
+    lang = await getTranslation();
+    lang = JSON.parse(lang);
     results = new Map();
     media = new Map();
     document.getElementById("errorMessage").className = "not-visible";
@@ -86,7 +89,7 @@ async function getDetail(data, type)
 function handleResult(results, sources)
 {
     let i = 0;
-    let parsed = []; 
+    let parsed = [];
     try
     {
         if(results.size == 0)
@@ -94,6 +97,7 @@ function handleResult(results, sources)
         results.forEach((value, key) => 
         {
             parsed = [];
+            let duplicate = false;
             if(value.contentType == "text/xml")
             {
                 parsed.push((new XMLSerializer()).serializeToString(value));
@@ -119,13 +123,24 @@ function handleResult(results, sources)
                             res = value.data;
                             for(let r in res)
                                 if(res[r].album.cover_big != undefined)
-                                    parsed.push(new Media(res[r].id,res[r].title,res[r].artist.name, null,res[r].album.cover_big, res[r].link,res[r].preview,null,null));
+                                {
+                                    duplicate = false;
+                                    parsed.forEach((data) => {if(data.id == res[r].album.id) duplicate = true;})
+                                    if(!duplicate)
+                                        parsed.push(new Media(res[r].album.id,res[r].album.title,res[r].artist.name, null,res[r].album.cover_big, "https://www.deezer.com/es/album/"+res[r].album.id,null/*res[r].preview*/,null,null));
+                                }
                             break;
                         case 'LastFM': //LastFM
                             res = value.results.albummatches.album;
                             for(let album in res)
                                 if(res[album].image[res[album].image.length-1]["#text"] != "")
-                                    parsed.push(new Media(res[album].mbid, res[album].name,res[album].artist, null, res[album].image[res[album].image.length-1]["#text"], res[album].url, null,null,null))
+                                {
+                                    duplicate = false;
+                                    parsed.forEach((data) => {if(data.id == res[album].mbid) duplicate = true;})
+                                    if(!duplicate)
+                                        parsed.push(new Media(res[album].mbid, res[album].name,res[album].artist, null, res[album].image[res[album].image.length-1]["#text"], res[album].url, null,null,null));
+                                }
+                            break;
                     }
                 }
                 else if(sources == moviesSource)
@@ -230,11 +245,11 @@ function createContentCard(content, previousHTML)
         previousHTML += content.image;
         previousHTML += cardPostImagePreResume;
         if(content.description != undefined) previousHTML += '<span class=scroll>' + content.description + '</span>';
-        else previousHTML += '<span class=scroll>There is no description for this product.</span>';
+        else previousHTML += '<span class=scroll>'+lang.noDescription+'</span>';
         previousHTML += cardPostResumePreFooter;
-        if(content.link != null) previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="Comprar"></i></a>';
+        if(content.link != null) previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="'+lang.buy+'"></i></a>';
         else if(content.year != null) previousHTML += '<p><b>Year</b>: ' + content.year + '</p></hr>';
-        if(content.previewLink != null)previousHTML += '<a href="' + content.previewLink + '" class="shopping-preview-right"><i class="fa fa-eye" title="Vista Previa"></i></a>';
+        if(content.previewLink != null)previousHTML += '<a href="' + content.previewLink + '" class="shopping-preview-right"><i class="fa fa-eye" title="'+lang.preview+'"></i></a>';
         else if(content.duration != null) previousHTML += '<b>Episode\'s length</b>: ' + content.duration;  
         previousHTML += cardPostFooter;
         return previousHTML;
@@ -281,4 +296,21 @@ function cambiarModo()
     let body = document.body;
     body.classList.toggle("oscuro");
     body.classList.toggle("claro");
+}
+
+async function getTranslation()
+{
+    let url = "../php/translation.php?lang="+(window.location.href.includes('en-us') ? 'en':'es');
+    return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
+    {
+        if(data != null && data != "")
+        {
+            if(data.charAt(0) == "\"" && data.charAt(data.length-1) == "\"")
+                data = data.substr(0,1).substr(data.charAt(data.length-1),1);
+            data = JSON.parse(data);
+            return data;
+        }
+        else
+            return null;
+    });
 }

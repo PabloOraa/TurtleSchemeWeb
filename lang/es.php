@@ -9,6 +9,9 @@
         "series" => "Series",
         "createdby" => "Creado por",
         "error" => "No se han encontrado datos para la b&uacute;squeda solicitada. Pruebe con otro título o autor a buscar",
+        "buy" => "Comprar",
+        "preview" => "Vista previa",
+        "noDescription" => "Actualmente no disponemos de una descripci&oacute;n para este producto",
         "cardColor" => "Color de las tarjetas",
         "red" => "Rojo",
         "pink" => "Rosa",
@@ -30,4 +33,13 @@
         "grey" => "Gris",
         "blueGrey" => "Gris Azulado"
     );
+
+    if (!function_exists('getData'))
+    {
+        function getData()
+        {
+            global $lang;
+            return $lang;
+        }
+    }
 ?>
