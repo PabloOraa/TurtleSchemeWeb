@@ -1,6 +1,8 @@
 let results;
 let media;
 let realColor;
+let initialTitle = "22.4px";
+let initialAuthor = "17.92px";
 var lang;
 var cardInit = "<section class='container'><div class='row active-with-click'>";
 var cardPreTitle = `<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card ${defaultColor}'><h2><span>`;
@@ -17,6 +19,7 @@ const booksSource = ["Google","GoodReads"];
 const musicSource = ["Deezer", "LastFM"];
 const moviesSource = ["OMBd"];
 const seriesSource = ["OMBd"];
+const maxHeightForTitleAuth = 35;
 
 window.onload = () => 
 {
@@ -88,7 +91,6 @@ async function getDetail(data, type)
 
 function handleResult(results, sources)
 {
-    let i = 0;
     let parsed = [];
     try
     {
@@ -101,7 +103,6 @@ function handleResult(results, sources)
             if(value.contentType == "text/xml")
             {
                 parsed.push((new XMLSerializer()).serializeToString(value));
-                i++;
                 addToMap(media,key,parsed);
             }
             else
@@ -158,7 +159,6 @@ function handleResult(results, sources)
                             parsed.push(new Media(res[r].imbdID,res[r].Title,(res[r].Director != "N/A" ? res[r].Director : res[r].Actors.split(",")[0]) + '-' + res[r].Genre.split(',')[0], res[r].Plot,res[r].Poster,null,null,res[r].Year,res[r].Runtime));
                 }
                 addToMap(media,key,parsed);
-                i++;
             }
         });
         writeResult(media);
@@ -183,7 +183,30 @@ function writeResult(content)
         content.forEach((value,key) => createSection(value,key));
         sectionWork();
         cardWork();
+        executeInterval(800);
     }
+}
+
+function executeInterval(time)
+{
+    toDefault(initialTitle,initialAuthor);
+    setTimeout(checkHeight, time);
+    setTimeout(checkHeight, time+600);
+}
+
+function executeIntervalForCard(time, card)
+{   
+    let exactCard = card[0];
+    exactCard.childNodes[0].childNodes[0].style.fontSize = initialTitle; 
+    exactCard.childNodes[0].childNodes[1].style.fontSize = initialAuthor;
+    setTimeout(() => {
+        for(let i = 0; i < exactCard.childNodes[0].childElementCount;i++)
+        while(parseFloat(getComputedStyle(exactCard.childNodes[0].childNodes[i]).height.substring(0,getComputedStyle(exactCard.childNodes[0].childNodes[i]).height.indexOf("p"))) > maxHeightForTitleAuth && getComputedStyle(exactCard.childNodes[0].childNodes[i]).height != "auto")
+            {
+                let newValue = parseFloat(exactCard.childNodes[0].childNodes[i].style.fontSize.substring(0,exactCard.childNodes[0].childNodes[i].style.fontSize.indexOf("p")))-1;
+                exactCard.childNodes[0].childNodes[i].style.fontSize = newValue + "px";
+            }
+    }, time);
 }
 
 function createSection(content, source)
@@ -199,10 +222,32 @@ function createSection(content, source)
         section += sectionEnd;
         document.getElementById('resultMessage').innerHTML += section;
         if(realColor != defaultColor)
-        {
             $("#card-color").val(realColor).change();
-        }
     }
+}
+
+function toDefault(title,author)
+{
+    document.getElementsByClassName("material-card").forEach
+    ((value) => 
+    {
+        value.childNodes[0].childNodes[0].style.fontSize = title; 
+        value.childNodes[0].childNodes[1].style.fontSize = author;
+    });
+}
+
+function checkHeight()
+{
+    document.getElementsByClassName("material-card").forEach
+    ((value) => 
+    {
+        for(let i = 0; i < value.childNodes[0].childElementCount;i++)
+            while(parseFloat(getComputedStyle(value.childNodes[0].childNodes[i]).height.substring(0,getComputedStyle(value.childNodes[0].childNodes[i]).height.indexOf("p"))) > maxHeightForTitleAuth && getComputedStyle(value.childNodes[0].childNodes[i]).height != "auto")
+            {
+                let newValue = parseFloat(value.childNodes[0].childNodes[i].style.fontSize.substring(0,value.childNodes[0].childNodes[i].style.fontSize.indexOf("p")))-1;
+                value.childNodes[0].childNodes[i].style.fontSize = newValue + "px";
+            }
+    });
 }
 
 function createCard(content, previousHTML)
@@ -215,18 +260,8 @@ function createCard(content, previousHTML)
 
 function createContentCard(content, previousHTML)
 {
-    let maxMaxTitleLength = 37;
-    let maxTitleLength = 26;
-    let maxMaxAuthorLength = 37;
-    let maxAuthorLength = 19;
     if(content instanceof Media)
     {
-        if(document.body.classList.contains("mobile"))
-        {
-            maxMaxTitleLength = 28;
-            maxTitleLength = 13;
-            maxMaxAuthorLength = 25;
-        }
         if(defaultColor != "Red")
         {
             realColor = defaultColor;
@@ -234,13 +269,9 @@ function createContentCard(content, previousHTML)
             $("#card-color").val("Red");
         }
         previousHTML += cardPreTitle;
-        if(content.getTitle().length > maxMaxTitleLength) previousHTML += "<p class='moreReducedText'>"+content.getTitle()+"</p>";
-        else if(content.getTitle().length > maxTitleLength) previousHTML += "<p class='reducedText'>"+content.getTitle()+"</p>"; 
-        else previousHTML += content.getTitle();
+        previousHTML += content.getTitle();
         previousHTML += cardPostTitlePreAuthor;;
-        if(content.author.toString().length > maxMaxAuthorLength) previousHTML += "<strong class='moreReducedText' title="+content.generalReview+"><i class='fa fa-fw fa-star' aria-hidden='true'></i>"+content.author;   
-        else if(content.author.toString().length > maxAuthorLength) previousHTML += "<strong class='moreReducedText' title="+content.generalReview+"><i class='fa fa-fw fa-star' aria-hidden='true'></i>"+content.author;    
-        else previousHTML += "<strong title="+content.generalReview+"><i class='fa fa-fw fa-star' label=checkReviews("+content.generalReview+")></i>"+content.author;
+        previousHTML += "<strong title="+content.generalReview+"><i class='fa fa-fw fa-star' label=checkReviews("+content.generalReview+")></i>"+content.author;
         previousHTML += cardPostAuthorPreImage;
         previousHTML += content.image;
         previousHTML += cardPostImagePreResume;

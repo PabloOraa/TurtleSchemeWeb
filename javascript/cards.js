@@ -9,7 +9,7 @@ function cardWork()
 
         if (card.hasClass('mc-active')) {
             card.removeClass('mc-active');
-
+            executeIntervalForCard(400, card);
             window.setTimeout(function() {
                 icon
                     .removeClass('fa-arrow-left')
@@ -19,7 +19,7 @@ function cardWork()
             }, 800);
         } else {
             card.addClass('mc-active');
-
+            executeIntervalForCard(400, card);
             window.setTimeout(function() {
                 icon
                     .removeClass('fa-bars')
