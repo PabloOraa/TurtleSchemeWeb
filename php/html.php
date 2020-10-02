@@ -8,6 +8,8 @@
         <script src="../javascript/Media.js"></script>
         <script src='../javascript/cards.js'></script>
         <script src='../javascript/calls.js'></script>
+        <script src='../javascript/search.js'></script>
+        <script src='../javascript/sections.js'></script>
         <script src="../javascript/script.js"></script>
 
         <!--Scripts from https://github.com/pwa-builder/pwa-install -->

@@ -59,6 +59,12 @@ async function getDetails(text,type)
     return await makeCall(url);
 }
 
+async function getTranslation()
+{
+    let url = "../php/translation.php?lang="+(window.location.href.includes('en-us') ? 'en':'es');
+    return await makeCall(url);
+}
+
 async function makeCall(url)
 {
     return await $.ajax(url,"xhrFields: { withCredentials: true }, crossdomain: true").done((data) =>

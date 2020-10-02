@@ -5,20 +5,8 @@ let initialTitle = "22.4px";
 let initialAuthor = "17.92px";
 let maxHeightForTitleAuth = 35.5;
 var lang;
-var cardInit = "<section class='container'><div class='row active-with-click'>";
-var cardPreTitle = `<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card ${defaultColor}'><h2><span>`;
-var cardPostTitlePreAuthor = "</span>";
-var cardPostAuthorPreImage = "</strong></h2><div class='mc-content'><div class='img-container'><img class='img-responsive' src='";
-var cardPostImagePreResume = "'></div><div class='mc-description'>";
-var cardPostResumePreIcon = "</div></div><a class='mc-btn-action'>";
-var cardPostIconPreFooter = "</a><div class='mc-footer'>";
-var cardPostFooter = "</div></article></div>"
-var cardEnd = "</div></section>";
-const sectionInit = "<div class='collapsible'><h2 class='collapsible__label'>";
-const sectionPostSource = "</h2><div class='collapsible__content'>";
-const sectionEnd = "</div></div>";
 const booksSource = ["Google","GoodReads"];
-const musicSource = ["Deezer", "LastFM"];
+const musicSource = ["LastFM", "Deezer"];
 const moviesSource = ["OMBd"];
 const seriesSource = ["OMBd"];
 
@@ -48,62 +36,50 @@ function addToMap(map, source, total)
 
 async function performSearch()
 {
-    lang = await getTranslation();
-    lang = JSON.parse(lang);
-    results = new Map();
-    media = new Map();
-    document.getElementById("errorMessage").className = "not-visible";
-    document.getElementById("resultMessage").innerHTML = "";
-    let data = document.getElementById('SearchItem').value;
-    let type = document.getElementById('type').value;
-    let res;
     let source;
-    data = data.split(' ').join('%20');
-    switch(type)
+    try
     {
-        case 'Books':
-            res = await searchGoogle(data);
-            source = booksSource;
-            if(res.totalItems != 0)
-                addToMap(results,booksSource[0],res);
-            res = await searchGoodReads(data);
-            if(res.getElementsByTagName("total-results")[0].childNodes[0].nodeValue != 0)
-                addToMap(results,booksSource[1],res);
-            break;
-        case 'Music':
-            source = musicSource;
-            res = await searchDeezer(data);
-            if(res.total != 0)
-                addToMap(results,musicSource[0],res);
-            res = await searchLastFM(data);
-            if(res.results.albummatches.album.length != 0)
-                addToMap(results,musicSource[1],res);
-            break;
-        case 'Movies':
-            source = moviesSource;
-            res = await searchOMBd(data,'movie');
-            await getDetail(res, 'movie');
-            break;
-        case 'Series':
-            source = seriesSource;
-            res = await searchOMBd(data,'series');
-            await getDetail(res, 'series');
-            break;
+        lang = await searchTranslation();
+        results = new Map();
+        document.getElementById("errorMessage").className = "not-visible";
+        document.getElementById("resultMessage").innerHTML = "";
+        let data = document.getElementById('SearchItem').value;
+        let type = document.getElementById('type').value;
+        data = data.split(' ').join('%20');
+        switch(type)
+        {
+            case 'Books':
+                source = booksSource;
+                await searchBooks(data);
+                break;
+            case 'Music':
+                source = musicSource;
+                await searchMusic(data);
+                break;
+            case 'Movies':
+                source = moviesSource;
+                searchMovies(data);
+                break;
+            case 'Series':
+                source = seriesSource;
+                searchSeries(data);
+                break;
+        }
+        handleResult(results, source);
     }
-    handleResult(results, source);
-}
-
-async function getDetail(data, type)
-{
-    let res = [];
-    for(let media in data.Search)
-        res.push(await getDetails(data.Search[media].Title, type));
-    if(res.length != 0)
-        addToMap(results,moviesSource[0],res);
+    catch(Exception)
+    {
+        console.log(Exception);
+        if(results.size > 0)
+            handleResult(results,source);
+        else
+            errorMessage();
+    }
 }
 
 function handleResult(results, sources)
 {
+    media = new Map();
     let parsed = [];
     try
     {
@@ -126,7 +102,6 @@ function handleResult(results, sources)
                     if(img.indexOf("/nophoto/") == -1)
                         parsed.push(new Media(id,title,auth,null,img,url,null,null,null,avgRating));
                 }
-                addToMap(media,key,parsed);
             }
             else
             {
@@ -181,8 +156,8 @@ function handleResult(results, sources)
                         if(res[r].Poster != "N/A")
                             parsed.push(new Media(res[r].imbdID,res[r].Title,(res[r].Director != "N/A" ? res[r].Director : res[r].Actors.split(",")[0]) + '-' + res[r].Genre.split(',')[0], res[r].Plot,res[r].Poster,null,null,res[r].Year,res[r].Runtime));
                 }
-                addToMap(media,key,parsed);
             }
+            addToMap(media,key,parsed);
         });
         writeResult(media);
     }
@@ -195,6 +170,7 @@ function handleResult(results, sources)
 
 function writeResult(content)
 {
+    realColor = "Red";
     document.getElementById('resultMessage').className = "not-visible";
     if(content.size == 0)
         errorMessage();
@@ -206,167 +182,13 @@ function writeResult(content)
         content.forEach((value,key) => createSection(value,key));
         sectionWork();
         cardWork();
-    }
-}
-
-function executeInterval(time)
-{
-    toDefault(initialTitle,initialAuthor);
-    setTimeout(checkHeight, time);
-}
-
-function toDefault(title,author)
-{
-    document.getElementsByClassName("material-card").forEach
-    ((value) => 
-    {
-        value.childNodes[0].childNodes[0].style.fontSize = title; 
-        value.childNodes[0].childNodes[1].style.fontSize = author;
-    });
-}
-
-function executeIntervalForCard(time, card)
-{   
-    let exactCard = card[0];
-    exactCard.childNodes[0].childNodes[0].style.fontSize = initialTitle; 
-    exactCard.childNodes[0].childNodes[1].style.fontSize = initialAuthor;
-    setTimeout(() => {changeSize(exactCard)}, time);
-}
-
-function checkHeight() 
-{
-    document.getElementsByClassName("material-card").forEach((value) => {changeSize(value);});
-}
-
-function changeSize(exactCard)
-{
-    for(let i = 0; i < exactCard.childNodes[0].childElementCount;i++)
-    {
-        while(parseFloat(getComputedStyle(exactCard.childNodes[0].childNodes[i]).height.substring(0,getComputedStyle(exactCard.childNodes[0].childNodes[i]).height.indexOf("p"))) > maxHeightForTitleAuth && getComputedStyle(exactCard.childNodes[0].childNodes[i]).height != "auto")
-        {
-            let newValue = parseFloat(exactCard.childNodes[0].childNodes[i].style.fontSize.substring(0,exactCard.childNodes[0].childNodes[i].style.fontSize.indexOf("p")))-1;
-            exactCard.childNodes[0].childNodes[i].style.fontSize = newValue + "px";
-        }
-        exactCard.childNodes[1].childNodes[0].childNodes[0].height = exactCard.childNodes[1].childNodes[0].offsetHeight;
-        exactCard.childNodes[1].childNodes[0].childNodes[0].width = exactCard.childNodes[1].childNodes[0].offsetWidth;
-    }
-}
-
-function createSection(content, source)
-{
-    realColor = "Red";
-    let section = sectionInit + source + sectionPostSource;
-    let cards = cardInit;
-    content.forEach((value) => cards = createCard(value, cards));
-    if(cards != null && cards != undefined)
-    {   
-        cards += cardEnd;
-        section += cards;
-        section += sectionEnd;
-        document.getElementById('resultMessage').innerHTML += section;
         if(realColor != defaultColor)
             $("#card-color").val(realColor).change();
     }
 }
 
-function createCard(content, previousHTML)
-{
-    if(content == null || content == undefined)
-        return null;
-    previousHTML = createContentCard(content, previousHTML);
-    return previousHTML;
-}
-
-function createContentCard(content, previousHTML)
-{
-    if(content instanceof Media)
-    {
-        if(defaultColor != "Red")
-        {
-            realColor = defaultColor;
-            defaultColor = "Red";
-            $("#card-color").val("Red");
-        }
-        previousHTML += cardPreTitle;
-        previousHTML += content.getTitle();
-        previousHTML += cardPostTitlePreAuthor;;
-        previousHTML += "<strong title="+content.generalReview+"><i class='fa fa-fw fa-star' label=checkReviews("+content.generalReview+")></i>"+content.author;
-        previousHTML += cardPostAuthorPreImage;
-        previousHTML += content.image;
-        previousHTML += cardPostImagePreResume;
-        if(content.description != undefined) previousHTML += '<span class=scroll>' + content.description + '</span>';
-        else previousHTML += '<span class=scroll>'+lang.noDescription+'</span>';
-        previousHTML += cardPostResumePreIcon;
-        if(content.description == null && content.previewLink == null)
-            previousHTML += '<i class="fa fa-eye" aria-hidden="true" onclick="window.open(\''+content.link+'\')" title='+lang.buy+'></i>';
-        else
-            previousHTML += "<i class='fa fa-bars'></i>";
-        previousHTML += cardPostIconPreFooter;
-        if(content.link != null) previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="'+lang.buy+'"></i></a>';
-        else if(content.year != null) previousHTML += '<p><b>Year</b>: ' + content.year + '</p></hr>';
-        if(content.previewLink != null)previousHTML += '<a href="' + content.previewLink + '" class="shopping-preview-right"><i class="fa fa-eye" title="'+lang.preview+'"></i></a>';
-        else if(content.duration != null) previousHTML += '<b>Episode\'s length</b>: ' + content.duration;  
-        previousHTML += cardPostFooter;
-        return previousHTML;
-    }
-}
-
-
 function errorMessage() 
 {
     document.getElementById("errorMessage").className = "visible";
     document.getElementById('cardColor').className = "not-visible";
-}
-
-//Collapsable menus for the Query from https://codepen.io/adalab/pen/NzOzQx?editors=1111w
-function sectionWork()
-{
-    let collapsibleTriggers = document.querySelectorAll('.collapsible__label');
-    for (let trigger = 0; trigger < collapsibleTriggers.length; trigger++) 
-        collapsibleTriggers[trigger].addEventListener('click', updateCollapsibles);
-}
-
-function updateCollapsibles(e) 
-{
-    let parent = e.currentTarget.parentElement;
-    
-    if (parent.classList.contains('collapsible--visible')) 
-        parent.classList.remove('collapsible--visible');  
-    else 
-    {
-        closeAllCollapsibles();
-        executeInterval(1);
-        parent.classList.add('collapsible--visible');
-    }
-}
-    
-function closeAllCollapsibles() 
-{
-    let collapsibles = document.querySelectorAll('.collapsible');
-    for (let i = 0; i < collapsibles.length; i++) 
-        collapsibles[i].classList.remove('collapsible--visible');
-}
-
-function cambiarModo()
-{
-    let body = document.body;
-    body.classList.toggle("oscuro");
-    body.classList.toggle("claro");
-}
-
-async function getTranslation()
-{
-    let url = "../php/translation.php?lang="+(window.location.href.includes('en-us') ? 'en':'es');
-    return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
-    {
-        if(data != null && data != "")
-        {
-            if(data.charAt(0) == "\"" && data.charAt(data.length-1) == "\"")
-                data = data.substr(0,1).substr(data.charAt(data.length-1),1);
-            data = JSON.parse(data);
-            return data;
-        }
-        else
-            return null;
-    });
 }
