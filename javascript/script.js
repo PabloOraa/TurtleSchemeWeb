@@ -10,7 +10,8 @@ var cardPreTitle = `<div class='col-md-4 col-sm-6 col-xs-12'><article class='mat
 var cardPostTitlePreAuthor = "</span>";
 var cardPostAuthorPreImage = "</strong></h2><div class='mc-content'><div class='img-container'><img class='img-responsive' src='";
 var cardPostImagePreResume = "'></div><div class='mc-description'>";
-var cardPostResumePreFooter = "</div></div><a class='mc-btn-action'><i class='fa fa-bars'></i></a><div class='mc-footer'>";
+var cardPostResumePreIcon = "</div></div><a class='mc-btn-action'>";
+var cardPostIconPreFooter = "</a><div class='mc-footer'>";
 var cardPostFooter = "</div></article></div>"
 var cardEnd = "</div></section>";
 const sectionInit = "<div class='collapsible'><h2 class='collapsible__label'>";
@@ -29,11 +30,14 @@ window.onload = () =>
 
     if(document.body.classList.contains("mobile"))
         maxHeightForTitleAuth = 36;
-    $(window).resize(function() 
+    else 
     {
-        clearTimeout(id);
-        id = setTimeout(executeInterval(800), 500);
-    });
+        $(window).resize(function() 
+        {
+            clearTimeout(id);
+            id = setTimeout(executeInterval(800), 500);
+        });
+    }
 }
 
 function addToMap(map, source, total)
@@ -111,7 +115,17 @@ function handleResult(results, sources)
             let duplicate = false;
             if(value.contentType == "text/xml")
             {
-                parsed.push((new XMLSerializer()).serializeToString(value));
+                for(let i = 0; i < value.getElementsByTagName("work").length;i++)
+                {
+                    let id = value.getElementsByTagName("best_book")[i].childNodes[1].textContent;
+                    let title = value.getElementsByTagName("title")[i].childNodes[0].textContent;
+                    let auth = value.getElementsByTagName("author")[i].childNodes[3].textContent;
+                    let img = value.getElementsByTagName("image_url")[i].childNodes[0].textContent.substr(0,value.getElementsByTagName("image_url")[i].childNodes[0].textContent.length-10) + "jpg";
+                    let url = "https://www.goodreads.com/book/show/" + id;
+                    let avgRating = value.getElementsByTagName("average_rating")[i].childNodes[0].textContent + "/5";
+                    if(img.indexOf("/nophoto/") == -1)
+                        parsed.push(new Media(id,title,auth,null,img,url,null,null,null,avgRating));
+                }
                 addToMap(media,key,parsed);
             }
             else
@@ -192,14 +206,13 @@ function writeResult(content)
         content.forEach((value,key) => createSection(value,key));
         sectionWork();
         cardWork();
-        executeInterval(800);
     }
 }
 
 function executeInterval(time)
 {
     toDefault(initialTitle,initialAuthor);
-    setTimeout(checkHeight, time+600);
+    setTimeout(checkHeight, time);
 }
 
 function toDefault(title,author)
@@ -228,13 +241,15 @@ function checkHeight()
 function changeSize(exactCard)
 {
     for(let i = 0; i < exactCard.childNodes[0].childElementCount;i++)
+    {
         while(parseFloat(getComputedStyle(exactCard.childNodes[0].childNodes[i]).height.substring(0,getComputedStyle(exactCard.childNodes[0].childNodes[i]).height.indexOf("p"))) > maxHeightForTitleAuth && getComputedStyle(exactCard.childNodes[0].childNodes[i]).height != "auto")
         {
-            console.log(getComputedStyle(exactCard.childNodes[0].childNodes[i]).height);
             let newValue = parseFloat(exactCard.childNodes[0].childNodes[i].style.fontSize.substring(0,exactCard.childNodes[0].childNodes[i].style.fontSize.indexOf("p")))-1;
             exactCard.childNodes[0].childNodes[i].style.fontSize = newValue + "px";
-            console.log(exactCard.childNodes[0].childNodes[i].style.fontSize);
         }
+        exactCard.childNodes[1].childNodes[0].childNodes[0].height = exactCard.childNodes[1].childNodes[0].offsetHeight;
+        exactCard.childNodes[1].childNodes[0].childNodes[0].width = exactCard.childNodes[1].childNodes[0].offsetWidth;
+    }
 }
 
 function createSection(content, source)
@@ -281,7 +296,12 @@ function createContentCard(content, previousHTML)
         previousHTML += cardPostImagePreResume;
         if(content.description != undefined) previousHTML += '<span class=scroll>' + content.description + '</span>';
         else previousHTML += '<span class=scroll>'+lang.noDescription+'</span>';
-        previousHTML += cardPostResumePreFooter;
+        previousHTML += cardPostResumePreIcon;
+        if(content.description == null && content.previewLink == null)
+            previousHTML += '<i class="fa fa-eye" aria-hidden="true" onclick="window.open(\''+content.link+'\')" title='+lang.buy+'></i>';
+        else
+            previousHTML += "<i class='fa fa-bars'></i>";
+        previousHTML += cardPostIconPreFooter;
         if(content.link != null) previousHTML += '<a href="' + content.link + '" class="shopping-preview-left"><i class="fa fa-shopping-cart" color="black" aria-hidden="true" title="'+lang.buy+'"></i></a>';
         else if(content.year != null) previousHTML += '<p><b>Year</b>: ' + content.year + '</p></hr>';
         if(content.previewLink != null)previousHTML += '<a href="' + content.previewLink + '" class="shopping-preview-right"><i class="fa fa-eye" title="'+lang.preview+'"></i></a>';
@@ -315,6 +335,7 @@ function updateCollapsibles(e)
     else 
     {
         closeAllCollapsibles();
+        executeInterval(1);
         parent.classList.add('collapsible--visible');
     }
 }

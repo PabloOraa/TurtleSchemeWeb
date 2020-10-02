@@ -11,6 +11,56 @@ let DeezerID = "437462";
 async function searchGoogle(text)
 {
     let url = `https://www.googleapis.com/books/v1/volumes?q=${text}&key=${GoogleKey}`;
+    return await makeCall(url);
+}
+
+
+async function searchGoodReads(text)
+{
+    //let url = `https://www.goodreads.com/search/index.xml?q=${text}&key=${GoodReadsKey}`;
+    let url = `https://cors-anywhere.herokuapp.com/https://www.goodreads.com/search/index.xml?key=${GoodReadsKey}&q=${text}`;
+    return await makeCall(url);
+}
+
+async function searchDeezer(text)
+{
+    //let url = `https://api.deezer.com/search?q=${text}`;
+    let url = `https://cors-anywhere.herokuapp.com/https://api.deezer.com/search?q=${text}`;
+    return await makeCall(url);
+}
+
+async function searchSpotify(text)
+{
+    /*let url = `https://api.spotify.com/v1/search?q=${text}`;
+    return await makeCall(url)*/
+}
+
+async function searchLastFM(text)
+{
+    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
+    return await makeCall(url);
+}
+
+async function searchMusixMatch(text) //Not in actual use
+{
+    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
+    return await makeCall(url);
+}
+
+async function searchOMBd(text,type)
+{
+    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&s=${text}&r=json&type=${type}`;
+    return await makeCall(url);
+}
+
+async function getDetails(text,type)
+{
+    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&t=${text}&r=json&type=${type}&plot=short`;
+    return await makeCall(url);
+}
+
+async function makeCall(url)
+{
     return await $.ajax(url,"xhrFields: { withCredentials: true }, crossdomain: true").done((data) =>
     {
         if(data.status == 200)
@@ -19,97 +69,3 @@ async function searchGoogle(text)
             return null;
     });
 }
-
-
-async function searchGoodReads(text)
-{
-    //let url = `https://www.goodreads.com/search/index.xml?q=${text}&key=${GoodReadsKey}`;
-    let url = `https://cors-anywhere.herokuapp.com/https://www.goodreads.com/search/index.xml?key=${GoodReadsKey}&q=${text}`;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }, crossdomain: true").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });
-}
-
-async function searchDeezer(text)
-{
-    //let url = `https://api.deezer.com/search?q=${text}`;
-    let url = `https://cors-anywhere.herokuapp.com/https://api.deezer.com/search?q=${text}`;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }, crossdomain: true").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });
-}
-
-async function searchSpotify(text)
-{
-    /*let url = `https://api.spotify.com/v1/search?q=${text}`;
-    return await $.ajax({url = url,headers: { Authorization: 'Bearer ${token}' }},"xhrFields: { withCredentials: true }").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });*/
-}
-
-async function searchLastFM(text)
-{
-    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }, crossdomain: true").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });
-}
-
-async function searchMusixMatch(text) //Not in actual use
-{
-    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }, crossdomain: true").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });
-}
-
-async function searchOMBd(text,type)
-{
-    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&s=${text}&r=json&type=${type}`;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }, crossdomain: true").done( (data) =>
-    {
-        if(data.Response == "True")
-            return data;
-        else
-            return null;
-    });
-}
-
-async function getDetails(text,type)
-{
-    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&t=${text}&r=json&type=${type}&plot=short`;
-    return await $.ajax(url,"xhrFields: { withCredentials: true }").done((data) =>
-    {
-        if(data.status == 200)
-            return data;
-        else
-            return null;
-    });
-}
-
-/*window.onload = () => 
-{   //&code="+code+"
-    let url = "https://accounts.spotify.com/api/token?grant_type=authorization_code&client_secret=f6d7eb3833fe49798fdfac92a4f7cdf1&client_id=1c77ad14a10147938dfc54a3a269a406";
-    console.log("Method");
-    $.ajax(url).done((result) =>{console.log(result);});
-}*/

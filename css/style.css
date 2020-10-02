@@ -26,11 +26,11 @@ body
     margin-right: 50%;
 }
 
-img
+/*img
 {
-    width: 335px;
-    height: 320px;
-}
+    min-width: 50px;
+    min-height: 50px;
+}*/
 
 footer 
 {
