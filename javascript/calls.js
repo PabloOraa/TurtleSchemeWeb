@@ -37,25 +37,25 @@ async function searchSpotify(text)
 
 async function searchLastFM(text)
 {
-    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
+    let url = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
     return await makeCall(url);
 }
 
 async function searchMusixMatch(text) //Not in actual use
 {
-    let url = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
+    let url = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${text}&api_key=${LastFMAPIKey}&format=json`;
     return await makeCall(url);
 }
 
 async function searchOMBd(text,type)
 {
-    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&s=${text}&r=json&type=${type}`;
+    let url = `https://www.omdbapi.com/?apikey=${OBDbKey}&s=${text}&r=json&type=${type}`;
     return await makeCall(url);
 }
 
 async function getDetails(text,type)
 {
-    let url = `http://www.omdbapi.com/?apikey=${OBDbKey}&t=${text}&r=json&type=${type}&plot=short`;
+    let url = `https://www.omdbapi.com/?apikey=${OBDbKey}&t=${text}&r=json&type=${type}&plot=short`;
     return await makeCall(url);
 }
 
@@ -69,8 +69,8 @@ async function makeCall(url)
 {
     return await $.ajax(url,"xhrFields: { withCredentials: true }, crossdomain: true").done((data) =>
     {
-        if(data.status == 200)
-            return data.items;
+        if(data != undefined && data != null)
+            return data;
         else
             return null;
     });

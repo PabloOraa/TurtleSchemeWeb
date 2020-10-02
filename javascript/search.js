@@ -17,23 +17,23 @@ async function searchBooks(data)
 
 async function searchMusic(data)
 {
-    res = await searchLastFM(data);
+    let res = await searchLastFM(data);
     if(res.results.albummatches.album.length != 0)
-        addToMap(results,musicSource[1],res);
-    let res = await searchDeezer(data);
-    if(res.total != 0)
         addToMap(results,musicSource[0],res);
+    res = await searchDeezer(data);
+    if(res.total != 0)
+        addToMap(results,musicSource[1],res);
 }
 
 async function searchMovie(data)
 {
-    res = await searchOMBd(data,'movie');
+    let res = await searchOMBd(data,'movie');
     await getDetail(res, 'movie');
 }
 
 async function searchSeries(data)
 {
-    res = await searchOMBd(data,'series');
+    let res = await searchOMBd(data,'series');
     await getDetail(res, 'series');
 }
 

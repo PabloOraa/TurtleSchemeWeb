@@ -10,6 +10,7 @@ const musicSource = ["LastFM", "Deezer"];
 const moviesSource = ["OMBd"];
 const seriesSource = ["OMBd"];
 
+
 window.onload = () => 
 {
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) 
@@ -58,11 +59,15 @@ async function performSearch()
                 break;
             case 'Movies':
                 source = moviesSource;
-                searchMovies(data);
+                //searchMovies(data);
+                res = await searchOMBd(data,'movie');
+                await getDetail(res, 'movie');
                 break;
             case 'Series':
                 source = seriesSource;
-                searchSeries(data);
+                //searchSeries(data);
+                res = await searchOMBd(data,'series');
+                await getDetail(res, 'series');
                 break;
         }
         handleResult(results, source);
@@ -75,6 +80,15 @@ async function performSearch()
         else
             errorMessage();
     }
+}
+
+async function getDetail(data, type)
+{
+    let res = [];
+    for(let media in data.Search)
+        res.push(await getDetails(data.Search[media].Title, type));
+    if(res.length != 0)
+        addToMap(results,moviesSource[0],res);
 }
 
 function handleResult(results, sources)
@@ -147,14 +161,24 @@ function handleResult(results, sources)
                     res = value;
                     for(let r in res)
                         if(res[r].Poster != "N/A")
-                            parsed.push(new Media(res[r].imbdID,res[r].Title,(res[r].Director != "N/A" ? res[r].Director : res[r].Actors.split(",")[0]) + '-' + res[r].Genre.split(',')[0], res[r].Plot,res[r].Poster,null,null,res[r].Year,res[r].Runtime));
+                        {    
+                            parsed.forEach((data) => {if(data.id == res[r].imbdID) duplicate = true;})
+                            if(!duplicate)
+                                parsed.push(new Media(res[r].imbdID,res[r].Title,(res[r].Director != "N/A" ? res[r].Director : res[r].Actors.split(",")[0]) + '-' + res[r].Genre.split(',')[0], res[r].Plot,res[r].Poster,null,null,res[r].Year,res[r].Runtime,res[r].imdbRating + "/10"));
+                        }
                 }
                 else if(sources == seriesSource)
                 {
                     res = value;
                     for(let r in res)
                         if(res[r].Poster != "N/A")
-                            parsed.push(new Media(res[r].imbdID,res[r].Title,(res[r].Director != "N/A" ? res[r].Director : res[r].Actors.split(",")[0]) + '-' + res[r].Genre.split(',')[0], res[r].Plot,res[r].Poster,null,null,res[r].Year,res[r].Runtime));
+                        {    
+                            duplicate = false;
+                            let id = res[r].imdbID;
+                            parsed.forEach((data) => {if(data.id === id) duplicate = true;})
+                            if(!duplicate)
+                                parsed.push(new Media(id,res[r].Title,(res[r].Director != "N/A" ? res[r].Director : res[r].Actors.split(",")[0]) + '-' + res[r].Genre.split(',')[0], res[r].Plot,res[r].Poster,null,null,res[r].Year,res[r].Runtime,res[r].imdbRating + "/10"));
+                        }
                 }
             }
             addToMap(media,key,parsed);

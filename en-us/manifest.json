@@ -1,21 +1,32 @@
 {
-    "name": "TurtleScheme",
+  "name": "TurtleScheme",
     "short_name": "TurtleScheme",
-    "description": "Test",
-    "lang":"en",
-    "start_url": "/",
+    "description": "TurtleSketch is an application made to my last project from my High-grade studies which store the data of a user writing only the name and getting the data from different sources.",
+    "lang": "English",
+    "start_url": "http://turtlesketch.consulting/",
     "display": "standalone",
-    "icons":
-    [
+    "icons": [
         {
-          "src": "../icons/icon-32.png",
-          "sizes": "32x32",
-          "type": "image/png"
+            "src": "http://turtlesketch.consulting/icons/icon-32.png",
+            "sizes": "32x32",
+            "type": "image/png"
         },
         {
-          "src": "../icons/icon-512.png",
-          "sizes": "512x512",
-          "type": "image/png"
+            "src": "http://turtlesketch.consulting/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
         }
-    ]
+    ],
+    "background_color": "",
+    "url": "http://turtlesketch.consulting/es-es/index.php",
+    "screenshots": [],
+    "orientation": "any",
+    "scope": "http://turtlesketch.consulting/",
+    "categories": [
+      "Books",
+      "Music",
+      "Movies",
+      "Series",
+      "Search"
+  ]
 }

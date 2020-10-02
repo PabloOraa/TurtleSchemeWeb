@@ -11,13 +11,22 @@
         <script src='../javascript/search.js'></script>
         <script src='../javascript/sections.js'></script>
         <script src="../javascript/script.js"></script>
-
+        
         <!--Scripts from https://github.com/pwa-builder/pwa-install -->
         <script type="module" src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall@latest/dist/pwa-install.min.js"></script>
-        <script type="module" src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwaauth@latest/dist/pwa-auth.min.js"></script>
+        <script type="module">
+            /*
+            This code uses the pwa-update web component https://github.com/pwa-builder/pwa-update to register your service worker,
+            tell the user when there is an update available and let the user know when your PWA is ready to use offline.
+            */
+            import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
+            const el = document.createElement('pwa-update');
+            document.body.appendChild(el);
+        </script>
+        <script src="../javascript/manup.js"></script>
 
         <!--Meta and link obtained from https://tomitm.github.io/appmanifest/ to get de manifest and create the PWA following instructions at https://github.com/pwa-builder/pwa-install -->
-        <link rel="manifest" href="manifest.json">
+        <link rel="manifest" href="./manifest.json">
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
