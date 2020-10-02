@@ -3,6 +3,7 @@ let media;
 let realColor;
 let initialTitle = "22.4px";
 let initialAuthor = "17.92px";
+let maxHeightForTitleAuth = 35.5;
 var lang;
 var cardInit = "<section class='container'><div class='row active-with-click'>";
 var cardPreTitle = `<div class='col-md-4 col-sm-6 col-xs-12'><article class='material-card ${defaultColor}'><h2><span>`;
@@ -19,12 +20,20 @@ const booksSource = ["Google","GoodReads"];
 const musicSource = ["Deezer", "LastFM"];
 const moviesSource = ["OMBd"];
 const seriesSource = ["OMBd"];
-const maxHeightForTitleAuth = 35;
 
 window.onload = () => 
 {
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) 
         document.body.classList.toggle("mobile");
+    var id;
+
+    if(document.body.classList.contains("mobile"))
+        maxHeightForTitleAuth = 36;
+    $(window).resize(function() 
+    {
+        clearTimeout(id);
+        id = setTimeout(executeInterval(800), 500);
+    });
 }
 
 function addToMap(map, source, total)
@@ -190,8 +199,17 @@ function writeResult(content)
 function executeInterval(time)
 {
     toDefault(initialTitle,initialAuthor);
-    setTimeout(checkHeight, time);
     setTimeout(checkHeight, time+600);
+}
+
+function toDefault(title,author)
+{
+    document.getElementsByClassName("material-card").forEach
+    ((value) => 
+    {
+        value.childNodes[0].childNodes[0].style.fontSize = title; 
+        value.childNodes[0].childNodes[1].style.fontSize = author;
+    });
 }
 
 function executeIntervalForCard(time, card)
@@ -199,14 +217,24 @@ function executeIntervalForCard(time, card)
     let exactCard = card[0];
     exactCard.childNodes[0].childNodes[0].style.fontSize = initialTitle; 
     exactCard.childNodes[0].childNodes[1].style.fontSize = initialAuthor;
-    setTimeout(() => {
-        for(let i = 0; i < exactCard.childNodes[0].childElementCount;i++)
+    setTimeout(() => {changeSize(exactCard)}, time);
+}
+
+function checkHeight() 
+{
+    document.getElementsByClassName("material-card").forEach((value) => {changeSize(value);});
+}
+
+function changeSize(exactCard)
+{
+    for(let i = 0; i < exactCard.childNodes[0].childElementCount;i++)
         while(parseFloat(getComputedStyle(exactCard.childNodes[0].childNodes[i]).height.substring(0,getComputedStyle(exactCard.childNodes[0].childNodes[i]).height.indexOf("p"))) > maxHeightForTitleAuth && getComputedStyle(exactCard.childNodes[0].childNodes[i]).height != "auto")
-            {
-                let newValue = parseFloat(exactCard.childNodes[0].childNodes[i].style.fontSize.substring(0,exactCard.childNodes[0].childNodes[i].style.fontSize.indexOf("p")))-1;
-                exactCard.childNodes[0].childNodes[i].style.fontSize = newValue + "px";
-            }
-    }, time);
+        {
+            console.log(getComputedStyle(exactCard.childNodes[0].childNodes[i]).height);
+            let newValue = parseFloat(exactCard.childNodes[0].childNodes[i].style.fontSize.substring(0,exactCard.childNodes[0].childNodes[i].style.fontSize.indexOf("p")))-1;
+            exactCard.childNodes[0].childNodes[i].style.fontSize = newValue + "px";
+            console.log(exactCard.childNodes[0].childNodes[i].style.fontSize);
+        }
 }
 
 function createSection(content, source)
@@ -224,30 +252,6 @@ function createSection(content, source)
         if(realColor != defaultColor)
             $("#card-color").val(realColor).change();
     }
-}
-
-function toDefault(title,author)
-{
-    document.getElementsByClassName("material-card").forEach
-    ((value) => 
-    {
-        value.childNodes[0].childNodes[0].style.fontSize = title; 
-        value.childNodes[0].childNodes[1].style.fontSize = author;
-    });
-}
-
-function checkHeight()
-{
-    document.getElementsByClassName("material-card").forEach
-    ((value) => 
-    {
-        for(let i = 0; i < value.childNodes[0].childElementCount;i++)
-            while(parseFloat(getComputedStyle(value.childNodes[0].childNodes[i]).height.substring(0,getComputedStyle(value.childNodes[0].childNodes[i]).height.indexOf("p"))) > maxHeightForTitleAuth && getComputedStyle(value.childNodes[0].childNodes[i]).height != "auto")
-            {
-                let newValue = parseFloat(value.childNodes[0].childNodes[i].style.fontSize.substring(0,value.childNodes[0].childNodes[i].style.fontSize.indexOf("p")))-1;
-                value.childNodes[0].childNodes[i].style.fontSize = newValue + "px";
-            }
-    });
 }
 
 function createCard(content, previousHTML)
