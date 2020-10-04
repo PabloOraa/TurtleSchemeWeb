@@ -71,34 +71,34 @@
                 </button>
             
                 <select class="left-space-10" title="Type" id="type">
-                    <option name="Music" value="Music" label="<?php echo $lang["music"];?>"></option>
-                    <option name="Books" value="Books" label="<?php echo $lang["books"];?>" selected></option>
-                    <option name="Movies" value="Movies" label="<?php echo $lang["movies"];?>"></option>
-                    <option name="Series" value="Series" label="<?php echo $lang["series"]?>"></option>
+                    <option value="Music" label="<?php echo $lang["music"];?>"></option>
+                    <option value="Books" label="<?php echo $lang["books"];?>" selected></option>
+                    <option value="Movies" label="<?php echo $lang["movies"];?>"></option>
+                    <option value="Series" label="<?php echo $lang["series"]?>"></option>
                 </select>
                 <span class="not-visible" id="cardColor">
                     &nbsp;
                     <?php echo $lang["cardColor"]?>
                     <select class="left-space-10" title="cardColor" id="card-color" onchange="changeCardColor()">
-                        <option name="Red" value="Red" label="<?php echo $lang["red"];?>" selected></option>
-                        <option name="Blue" value="Blue" label="<?php echo $lang["blue"];?>"></option>
-                        <option name="Green" value="Green" label="<?php echo $lang["green"];?>"></option>
-                        <option name="Purple" value="Purple" label="<?php echo $lang["purple"]?>"></option>
-                        <option name="Light-Blue" value="Light-Blue" label="<?php echo $lang["lightBlue"];?>"></option>
-                        <option name="Cyan" value="Cyan" label="<?php echo $lang["cyan"];?>"></option>
-                        <option name="Pink" value="Pink" label="<?php echo $lang["pink"]?>"></option>
-                        <option name="Indigo" value="Indigo" label="<?php echo $lang["indigo"];?>"></option>
-                        <option name="Deep-Purple" value="Deep-Purple" label="<?php echo $lang["deepPurple"];?>"></option>
-                        <option name="Teal" value="Teal" label="<?php echo $lang["teal"]?>"></option>
-                        <option name="Light-Green" value="Light-Green" label="<?php echo $lang["lightGreen"];?>"></option>
-                        <option name="Lime" value="Lime" label="<?php echo $lang["lime"];?>"></option>
-                        <option name="Yellow" value="Yellow" label="<?php echo $lang["yellow"]?>"></option>
-                        <option name="Amber" value="Amber" label="<?php echo $lang["amber"];?>"></option>
-                        <option name="Orange" value="Orange" label="<?php echo $lang["orange"];?>"></option>
-                        <option name="Deep-Orange" value="Deep-Orange" label="<?php echo $lang["deepOrange"]?>"></option>
-                        <option name="Blue-Grey" value="Blue-Grey" label="<?php echo $lang["blueGrey"];?>"></option>
-                        <option name="Brown" value="Brown" label="<?php echo $lang["brown"];?>"></option>
-                        <option name="Grey" value="Grey" label="<?php echo $lang["grey"]?>"></option>
+                        <option value="Red" label="<?php echo $lang["red"];?>" selected></option>
+                        <option value="Blue" label="<?php echo $lang["blue"];?>"></option>
+                        <option value="Green" label="<?php echo $lang["green"];?>"></option>
+                        <option value="Purple" label="<?php echo $lang["purple"]?>"></option>
+                        <option value="Light-Blue" label="<?php echo $lang["lightBlue"];?>"></option>
+                        <option value="Cyan" label="<?php echo $lang["cyan"];?>"></option>
+                        <option value="Pink" label="<?php echo $lang["pink"]?>"></option>
+                        <option value="Indigo" label="<?php echo $lang["indigo"];?>"></option>
+                        <option value="Deep-Purple" label="<?php echo $lang["deepPurple"];?>"></option>
+                        <option value="Teal" label="<?php echo $lang["teal"]?>"></option>
+                        <option value="Light-Green" label="<?php echo $lang["lightGreen"];?>"></option>
+                        <option value="Lime" label="<?php echo $lang["lime"];?>"></option>
+                        <option value="Yellow" label="<?php echo $lang["yellow"]?>"></option>
+                        <option ="Amber" label="<?php echo $lang["amber"];?>"></option>
+                        <option value="Orange" label="<?php echo $lang["orange"];?>"></option>
+                        <option value="Deep-Orange" label="<?php echo $lang["deepOrange"]?>"></option>
+                        <option value="Blue-Grey" label="<?php echo $lang["blueGrey"];?>"></option>
+                        <option value="Brown" label="<?php echo $lang["brown"];?>"></option>
+                        <option value="Grey" label="<?php echo $lang["grey"]?>"></option>
                     </select>
                 </span>
             </form>

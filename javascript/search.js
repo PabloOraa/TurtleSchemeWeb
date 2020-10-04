@@ -11,6 +11,17 @@ async function searchBooks(data)
     if(res.totalItems != 0)
         addToMap(results,booksSource[0],res);
     res = await searchGoodReads(data);
+    if (window.ActiveXObject) 
+    { 
+        var oXML = new ActiveXObject("Microsoft.XMLDOM"); 
+        oXML.loadXML(res);
+        res = oXML;
+    }
+    // code for Chrome, Safari, Firefox, Opera, etc. 
+    else 
+    {
+        res = (new DOMParser()).parseFromString(res, "text/xml");
+    }
     if(res.getElementsByTagName("total-results")[0].childNodes[0].nodeValue != 0)
         addToMap(results,booksSource[1],res);
 }
@@ -21,6 +32,7 @@ async function searchMusic(data)
     if(res.results.albummatches.album.length != 0)
         addToMap(results,musicSource[0],res);
     res = await searchDeezer(data);
+    res = JSON.parse(res);
     if(res.total != 0)
         addToMap(results,musicSource[1],res);
 }

@@ -17,15 +17,18 @@ async function searchGoogle(text)
 
 async function searchGoodReads(text)
 {
-    //let url = `https://www.goodreads.com/search/index.xml?q=${text}&key=${GoodReadsKey}`;
-    let url = `https://cors-anywhere.herokuapp.com/https://www.goodreads.com/search/index.xml?key=${GoodReadsKey}&q=${text}`;
-    return await makeCall(url);
+    /*let url = `https://cors-anywhere.herokuapp.com/https://www.goodreads.com/search/index.xml?key=${GoodReadsKey}&q=${text}`;
+    return await makeCall(url);*/
+    text = text.split('%20').join('+');
+    let finalURL = `../php/calls.php?source=GoodReads&key=${GoodReadsKey}&param=${text}`;
+    return await makeCall(finalURL);
 }
 
 async function searchDeezer(text)
 {
-    //let url = `https://api.deezer.com/search?q=${text}`;
-    let url = `https://cors-anywhere.herokuapp.com/https://api.deezer.com/search?q=${text}`;
+    text = text.split('%20').join('+');
+    let url = `../php/calls.php?source=Deezer&param=${text}`;
+    //let url = `https://cors-anywhere.herokuapp.com/https://api.deezer.com/search?q=${text}`;
     return await makeCall(url);
 }
 
