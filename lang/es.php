@@ -10,6 +10,7 @@
         "createdby" => "Creado por",
         "error" => "No se han encontrado datos para la b&uacute;squeda solicitada. Pruebe con otro título o autor a buscar",
         "buy" => "Comprar",
+        "seeonweb" => "Ver on la web",
         "preview" => "Vista previa",
         "noDescription" => "Actualmente no disponemos de una descripci&oacute;n para este producto",
         "cardColor" => "Color de las tarjetas",

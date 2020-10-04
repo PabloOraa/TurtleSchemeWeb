@@ -126,7 +126,7 @@ function handleResult(results, sources)
 
                     for(let r in res)
                         if(res[r].volumeInfo.imageLinks != undefined)
-                            parsed.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors, res[r].volumeInfo.description,res[r].volumeInfo.imageLinks.thumbnail,res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink,null,null, '5/5'));
+                            parsed.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors, res[r].volumeInfo.description,res[r].volumeInfo.imageLinks.thumbnail,res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink,null,null, null));
                 }
                 else if(sources == musicSource)
                 {

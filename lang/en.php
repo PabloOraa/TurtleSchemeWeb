@@ -10,6 +10,7 @@
         "createdby" => "Created by",
         "error" => "Error",
         "buy" => "Buy",
+        "seeonweb" => "View on the web",
         "preview" => "Preview",
         "noDescription" => "There is no description for this product.",
         "cardColor" => "Card Color",

@@ -42,7 +42,10 @@ function addHeader(previousHTML, content)
     previousHTML += cardPreTitle;
     previousHTML += content.getTitle();
     previousHTML += cardPostTitlePreAuthor;;
-    previousHTML += "<strong title="+content.generalReview+"><i class='fa fa-fw fa-star' label=checkReviews("+content.generalReview+")></i>"+content.author;
+    if(content.generalReview != null && content.generalReview != undefined)
+        previousHTML += "<strong title="+content.generalReview+"><i class='fa fa-fw fa-star' label="+content.generalReview+"></i>"+content.author;
+    else
+        previousHTML += "<strong><i class='fa fa-fw fa-star'></i>"+content.author;
     previousHTML += cardPostAuthorPreImage;
     previousHTML += content.image;
     return previousHTML;
@@ -62,7 +65,7 @@ function addIcon(previousHTML,content)
 {
     previousHTML += cardPostResumePreIcon;
     if(content.description == null && content.previewLink == null)
-        previousHTML += '<i class="fa fa-eye" aria-hidden="true" onclick="window.open(\''+content.link+'\')" title='+lang.buy+'></i>';
+        previousHTML += '<i class="fa fa-eye" aria-hidden="true" onclick="window.open(\''+content.link+'\')" title='+lang.seeonweb+'></i>';
     else
         previousHTML += "<i class='fa fa-bars'></i>";
     return previousHTML;
