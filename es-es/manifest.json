@@ -3,30 +3,30 @@
     "short_name": "TurtleScheme",
     "description": "TurtleSketch is an application made to my last project from my High-grade studies which store the data of a user writing only the name and getting the data from different sources.",
     "lang": "Spanish; Castilian",
-    "start_url": "http://turtlesketch.consulting/",
+    "start_url": "https://turtlesketch.consulting/es-es/index.php",
     "display": "standalone",
     "icons": [
         {
-            "src": "http://turtlesketch.consulting/icons/icon-32.png",
+            "src": "https://turtlesketch.consulting/icons/icon-32.png",
             "sizes": "32x32",
             "type": "image/png"
         },
         {
-            "src": "http://turtlesketch.consulting/icons/icon-512.png",
+            "src": "https://turtlesketch.consulting/icons/icon-512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
     ],
-    "background_color": "",
-    "url": "http://turtlesketch.consulting/es-es/index.php",
+    "background_color": "#000000",
+    "url": "https://turtlesketch.consulting/es-es/index.php",
     "screenshots": [],
     "orientation": "any",
-    "scope": "http://turtlesketch.consulting/",
+    "scope": "https://turtlesketch.consulting/",
     "categories": [
-      "Books",
-      "Music",
-      "Movies",
+      "Libros",
+      "Música",
+      "Películas",
       "Series",
-      "Search"
+      "Búsqueda"
   ]
 }

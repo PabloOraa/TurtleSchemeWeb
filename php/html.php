@@ -10,6 +10,7 @@
         <script src='../javascript/calls.js'></script>
         <script src='../javascript/search.js'></script>
         <script src='../javascript/sections.js'></script>
+        <script src='https://unpkg.com/tesseract.js@v2.0.0-alpha.13/dist/tesseract.min.js'></script>
         <script src="../javascript/script.js"></script>
         
         <!--Scripts from https://github.com/pwa-builder/pwa-install -->
@@ -93,7 +94,7 @@
                         <option value="Light-Green" label="<?php echo $lang["lightGreen"];?>"></option>
                         <option value="Lime" label="<?php echo $lang["lime"];?>"></option>
                         <option value="Yellow" label="<?php echo $lang["yellow"]?>"></option>
-                        <option ="Amber" label="<?php echo $lang["amber"];?>"></option>
+                        <option value="Amber" label="<?php echo $lang["amber"];?>"></option>
                         <option value="Orange" label="<?php echo $lang["orange"];?>"></option>
                         <option value="Deep-Orange" label="<?php echo $lang["deepOrange"]?>"></option>
                         <option value="Blue-Grey" label="<?php echo $lang["blueGrey"];?>"></option>

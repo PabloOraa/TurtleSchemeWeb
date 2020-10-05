@@ -9,7 +9,7 @@ const booksSource = ["Google","GoodReads"];
 const musicSource = ["LastFM", "Deezer"];
 const moviesSource = ["OMBd"];
 const seriesSource = ["OMBd"];
-
+//const worker = new Tesseract.TesseractWorker();
 
 window.onload = () => 
 {
@@ -126,7 +126,12 @@ function handleResult(results, sources)
 
                     for(let r in res)
                         if(res[r].volumeInfo.imageLinks != undefined)
-                            parsed.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors, res[r].volumeInfo.description,res[r].volumeInfo.imageLinks.thumbnail,res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink,null,null, null));
+                        {
+                            let image = (res[r].volumeInfo.imageLinks.thumbnail).replace('http://','https://');
+                            /*image = image.replace('&zoom=1','');
+                            checkImage(image);*/
+                            parsed.push(new Media(res[r].id,res[r].volumeInfo.title,res[r].volumeInfo.authors, res[r].volumeInfo.description,image,res[r].volumeInfo.infoLink, res[r].volumeInfo.previewLink,null,null, null));
+                        }
                 }
                 else if(sources == musicSource)
                 {
@@ -216,3 +221,13 @@ function errorMessage()
     document.getElementById("errorMessage").className = "visible";
     document.getElementById('cardColor').className = "not-visible";
 }
+
+/*function checkImage(url)
+{
+    url = "https://cors-anywhere.herokuapp.com/" + url;
+    worker.recognize(url, 'en')
+    .then(function(data)
+    {
+        console.log(data);
+    })
+}*/
