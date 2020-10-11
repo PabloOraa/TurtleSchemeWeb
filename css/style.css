@@ -255,3 +255,38 @@ input:checked + .slider:before
 {
     color:#000000;
 }
+
+
+/*SURFACE DUO*/
+@media (screen-spanning: single-fold-vertical)
+{
+    .right 
+    {
+        width: calc(100vw - env(fold-left) - env(fold-width));  /*fold-right*/
+        position: absolute;
+        left: calc(env(fold-left) + env(fold-width)); /*fold-right*/
+    }
+
+    .left 
+    {
+        width: env(fold-left);
+        position: absolute;
+        left: 0;
+    }
+}
+
+@media (screen-spanning: single-fold-horizontal) 
+{
+    .left 
+    {
+        width: env(fold-top);
+        bottom: env(fold-top);
+    }
+
+    .right
+    {
+        width: env(fold-bottom);
+        position: absolute;
+        top: env(fold-bottom);
+    }
+}
