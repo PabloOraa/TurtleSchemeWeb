@@ -15,10 +15,19 @@ window.onload = () =>
 {
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) 
         document.body.classList.toggle("mobile");
+    if(/iPhone|iPad|iPad/i.test(navigator.userAgent))
+    {
+        document.getElementById('Install').classList.toggle("not-visible");
+        document.getElementById('Install').classList.toggle("visible");
+    }
     var id;
 
     if(document.body.classList.contains("mobile"))
-        maxHeightForTitleAuth = 36;
+    {
+        maxHeightForTitleAuth = 45; //Cualquier valor menor de 72
+        if(new URLSearchParams(window.location.search).get('dark') == 'true')
+            document.body.classList.toggle("dark");
+    }
     else 
     {
         $(window).resize(function() 

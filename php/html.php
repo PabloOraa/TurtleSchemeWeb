@@ -62,7 +62,7 @@
                     <p><?php echo $lang["intro"];?></p>
                     <p><?php echo $lang["instructions"];?></p>
                 </div>
-                <pwa-install>Install</pwa-install>
+                <div id="install" class='not-visible'><pwa-install>Install</pwa-install></div>
 
 
                 <form class="form-inline mt-2 mt-md-0" action="JavaScript:performSearch()">
