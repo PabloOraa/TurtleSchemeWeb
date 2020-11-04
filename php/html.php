@@ -3,9 +3,19 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TurtleSketch</title>
+        <!--favicon-->
+        <link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png?v=PYAbe7aqz0">
+        <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png?v=PYAbe7aqz0">
+        <link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png?v=PYAbe7aqz0">
+        <link rel="mask-icon" href="../icons/safari-pinned-tab.svg?v=PYAbe7aqz0" color="#455b5d">
+        <link rel="shortcut icon" href="../icons/favicon.ico?v=PYAbe7aqz0">
+        <meta name="msapplication-config" content="./browserconfig.xml?v=PYAbe7aqz0">
+        <meta name="msapplication-TileColor" content="#2d89ef">
+        <meta name="msapplication-TileImage" content="../icons/mstile-144x144.png?v=PYAbe7aqz0">
+        <meta name="theme-color" content="#ffffff">
         <!--SURFACE DUO>-->
         <meta http-equiv="origin-trial" content="AutQkTYZ29WTdKx1K+PK1iWvjE7G2bjFTxfnvx1ufF15ZuJo1XCcMD5TzgDCu5sZFZAxY70bIxNuo9f0SAQKjgcAAABreyJvcmlnaW4iOiJodHRwczovL3R1cnRsZXNrZXRjaC5jb206NDQzIiwiaXNTdWJkb21haW4iOnRydWUsImZlYXR1cmUiOiJXaW5kb3dTZWdtZW50cyIsImV4cGlyeSI6MTYwNjA4MjczOH0=">
-        <title>TurtleScheme</title>
         <!--JS-->
         <script src="../javascript/Media.js"></script>
         <script src='../javascript/cards.js'></script>
@@ -29,7 +39,7 @@
         <script src="../javascript/manup.js"></script>
 
         <!--Meta and link obtained from https://tomitm.github.io/appmanifest/ to get de manifest and create the PWA following instructions at https://github.com/pwa-builder/pwa-install -->
-        <link rel="manifest" href="./manifest.json">
+        <link rel="manifest" href="./manifest.webmanifest">
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
